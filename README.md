@@ -1,5 +1,12 @@
 ### Hi there 👋
 
+My name's Max, I'm from Canada and I love all things computers :)
+
+- 🌱 I’m currently learning Javascript and Node.js
+- 📫 You can find me on Discord at: `BananaFalls#2020`
+- ⚡ Fun fact: I've been on the Hypixel staff team since June 6th, 2020!
+
+
 <!--
 **maxwellward/maxwellward** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
