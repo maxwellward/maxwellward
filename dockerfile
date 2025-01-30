@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build /app/dist /app
 
 # Expose the port that serve will run on
-EXPOSE 5000
+EXPOSE 5001
 
 # Start serve to serve the built Vue app
-CMD ["serve", "-s", ".", "-l", "5000"]
+CMD ["serve", "-s", ".", "-l", "5001"]
