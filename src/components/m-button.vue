@@ -1,7 +1,7 @@
 <template>
 	<router-link
 		v-if="routeName"
-		:class="[colourful ? 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 background-animate' : 'bg-secondary']"
+		:class="[colourful ? 'bg-linear-to-r from-pink-500 via-red-500 to-yellow-500 background-animate' : 'bg-secondary']"
 		class="py-3 px-8 rounded-lg text-type-primary font-semibold flex gap-2 w-fit"
 		:to="{ name: routeName }">
 		<p>{{ text }}</p>
@@ -9,7 +9,7 @@
 	/></router-link>
 	<button
 		v-else
-		:class="[colourful ? 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 background-animate' : 'bg-secondary']"
+		:class="[colourful ? 'bg-linear-to-r from-pink-500 via-red-500 to-yellow-500 background-animate' : 'bg-secondary']"
 		class="py-3 px-8 rounded-lg text-type-primary font-semibold flex gap-2">
 		<p>{{ text }}</p>
 		<ArrowLongRightIcon class="size-6" />
