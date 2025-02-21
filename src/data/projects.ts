@@ -6,7 +6,7 @@ export const openSourceContributions = [
 	},
 	{
 		title: "Streamyfin",
-		description: "Open Source Jellyfin client for Android and iOS.",
+		description: "Open source Jellyfin client for Android and iOS.",
 		link: "https://github.com/streamyfin/streamyfin"
 	},
 	{
