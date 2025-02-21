@@ -4,10 +4,10 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: '#13111c',
+				primary: '#161618',
 				secondary: '#1f1d29',
-				card: '#181622',
-				cardborder: '#1F1D27',
+				card: '#161618',
+				cardborder: '#262629',
 				type: {
 					primary: '#FFFFFF',
 					secondary: '#666270',
@@ -24,6 +24,9 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Roboto', 'sans-serif'],
+			},
+			screens: {
+				xs: '480px',
 			},
 		},
 	},

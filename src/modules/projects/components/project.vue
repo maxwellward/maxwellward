@@ -1,13 +1,9 @@
 <template>
-	<a
-		:href="link"
-		target="_blank"
-		rel="noreferrer"
-		class="group hover:cursor-pointer bg-card border-2 border-cardborder rounded-xl flex w-72 p-3 transition-all duration-150 hover:scale-102 hover:shadow-lg hover:-rotate-2 relative">
+	<a :href="link" target="_blank" rel="noreferrer"
+		class="group hover:cursor-pointer bg-card border-2 border-cardborder rounded-xl flex w-1/4 min-w-[250px] p-3 transition-all duration-150 hover:scale-102 hover:shadow-lg hover:-rotate-2 relative">
 		<CodeBracketSquareIcon class="size-8 mt-1.5 flex-shrink-0 text-type-primary" />
 		<div class="ml-1">
 			<h2 class="font-semibold text-type-primary text-xl mt-2">{{ title }}</h2>
-			<h3 class="font-semibold text-type-primary mt-0.5">{{ date }}</h3>
 			<p class="mt-1.5 text-type-secondary text-sm w-[85%]">{{ description }}</p>
 		</div>
 		<ArrowTopRightOnSquareIcon
@@ -20,10 +16,6 @@ import { CodeBracketSquareIcon, ArrowTopRightOnSquareIcon } from '@heroicons/vue
 
 defineProps({
 	title: {
-		type: String,
-		required: true,
-	},
-	date: {
 		type: String,
 		required: true,
 	},
