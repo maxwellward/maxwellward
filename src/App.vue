@@ -2,7 +2,7 @@
 	<div id="app">
 
 		<body>
-			<div class="-z-[9999] fixed size-full invisible lg:visible" />
+			<div class="-z-9999 fixed size-full invisible lg:visible" />
 			<header>
 				<HeaderComponent />
 			</header>
