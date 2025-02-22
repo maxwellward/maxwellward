@@ -25,6 +25,7 @@ export const projects: Project[] = [
 		link: 'https://github.com/slothpixel/core',
 		type: 'contribution'
 	},
+	// Own projects
 	{
 		title: 'Dogspotter',
 		description: 'A mobile game based around taking photos of dogs in real life to gain points and climb the leaderboard.',
@@ -36,6 +37,12 @@ export const projects: Project[] = [
 		title: 'Pokémon GO Data Viewer',
 		description: 'Data visualiser for Pokémon GO data packages.',
 		link: 'https://github.com/maxwellward/pogo-dump-viewer',
+		type: 'own'
+	},
+	{
+		title: 'This website!',
+		description: 'My portfolio, used to show off my projects and what I get up to.',
+		link: 'https://github.com/maxwellward/maxwellward',
 		type: 'own'
 	},
 	{
