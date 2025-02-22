@@ -11,7 +11,8 @@
 				<p class="mt-0.5">Software Developer</p>
 			</div>
 		</div>
-		<m-button text="projects" colourful route-name="projects" class="mt-6 transition-all duration-200 hover:scale-105 hover:-rotate-2" />
+		<m-button text="my work" colourful route-name="projects"
+			class="mt-6 transition-all duration-200 hover:scale-105 hover:-rotate-2" />
 	</div>
 </template>
 
