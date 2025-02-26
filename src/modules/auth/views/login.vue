@@ -1,13 +1,21 @@
 <template>
-	<div class="text-white">
-		<p>Welcome</p>
-		<input type="text" placeholder="Email" v-model="email" />
-		<input type="password" placeholder="Password" v-model="password" />
-		<button @click="login(email, password)">Sign in</button>
+	<div class="text-white w-full flex-col flex items-center h-full justify-center">
+		<div class="flex flex-col gap-2">
+			<input type="text" placeholder="Email" v-model="email"
+				class="border-2 border-type-secondary text-type-secondary rounded-sm p-1.5" />
+			<input type="password" placeholder="Password" v-model="password"
+				class="border-2 border-type-secondary text-type-secondary rounded-sm p-1.5" />
+		</div>
+
+		<button @click="login(email, password)"
+			class="border border-type-secondary rounded-md py-1.5 px-3 text-sm mt-4 cursor-pointer">
+			Sign in
+		</button>
 	</div>
 </template>
 
 <script setup lang="ts">
+import router from "@/router";
 import { FirebaseError } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ref } from "vue";
@@ -19,9 +27,8 @@ const password = ref('');
 
 const login = async (email: string, password: string) => {
 	try {
-		const userCredential = await signInWithEmailAndPassword(auth, email, password);
-		const user = userCredential.user;
-		console.log(user);
+		await signInWithEmailAndPassword(auth, email, password);
+		router.push({ name: 'admin' })
 	} catch (error: unknown) {
 		if (error instanceof FirebaseError) {
 			const errorCode = error.code;

@@ -1,21 +1,28 @@
-import Admin from "@/modules/admin/views/admin.vue";
 import Projects from "@/modules/admin/views/projects.vue";
+import AdminLayout from "./layout/admin-layout.vue";
+import Admin from "@/modules/admin/views/admin.vue";
 
 export const adminRoutes = [
 	{
 		path: '/admin',
 		name: 'admin',
-		component: Admin,
+		redirect: { name: 'admin-home' },
+		component: AdminLayout,
 		meta: {
 			requiresAuth: true
 		},
+		children: [
+			{
+				path: '',
+				name: 'admin-home',
+				component: Admin,
+			},
+			{
+				path: 'projects',
+				name: 'project-editor',
+				component: Projects,
+			}
+		]
 	},
-	{
-		path: '/admin/projects',
-		name: 'project-editor',
-		component: Projects,
-		meta: {
-			requiresAuth: true
-		},
-	}
+
 ]
