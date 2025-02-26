@@ -58,8 +58,6 @@ router.beforeEach(async (to, _, next) => {
 		const auth = getAuth(firebase);
 		await auth.authStateReady();
 
-		console.log(auth.currentUser);
-
 		const isAuthenticated = auth.currentUser;
 		if (!isAuthenticated) {
 			next({ name: 'auth' });

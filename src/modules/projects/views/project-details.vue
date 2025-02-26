@@ -47,8 +47,6 @@ const detailsHtml = ref('');
 onMounted(async () => {
 	projectData.value = projects.find((project) => project.title === props.project);
 	detailsHtml.value = await marked.parse(projectData.value.details)
-	console.log(detailsHtml.value);
-
 })
 </script>
 

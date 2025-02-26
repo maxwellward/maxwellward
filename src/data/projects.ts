@@ -26,6 +26,8 @@ export const projects: Project[] = [
 		type: 'contribution'
 	},
 	// Own projects
+
+	// THIS IS IN FIRESTORE NOW
 	{
 		title: 'Dogspotter',
 		description: 'A mobile game based around taking photos of dogs in real life to gain points and climb the leaderboard.',

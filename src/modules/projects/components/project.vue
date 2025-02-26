@@ -1,13 +1,13 @@
 <template>
-	<component :is="!details ? 'a' : 'router-link'"
-		v-bind="!details ? { href: link, target: '_blank', rel: 'noreferrer' } : { to: { name: 'project-details', params: { project: title } } }"
+	<component :is="!content ? 'a' : 'router-link'"
+		v-bind="!content ? { href: link, target: '_blank', rel: 'noreferrer' } : { to: { name: 'project-details', params: { project: title } } }"
 		class="group hover:cursor-pointer bg-card border-2 border-cardborder rounded-xl flex w-1/4 min-w-[250px] p-3 transition-all duration-150 hover:scale-102 hover:shadow-lg hover:-rotate-2 relative">
 		<CodeBracketSquareIcon class="size-8 mt-1.5 shrink-0 text-type-primary" />
 		<div class="ml-1">
 			<h2 class="font-semibold text-type-primary text-xl mt-2.5">{{ title }}</h2>
 			<p class="mt-1.5 text-type-secondary text-sm w-[85%]">{{ description }}</p>
 		</div>
-		<ArrowLongRightIcon v-if="details"
+		<ArrowLongRightIcon v-if="content"
 			class="transition-all duration-150 opacity-0 group-hover:opacity-100 bottom-3 right-3 size-5 absolute text-type-secondary" />
 		<ArrowTopRightOnSquareIcon v-else
 			class="transition-all duration-150 opacity-0 group-hover:opacity-100 bottom-3 right-3 size-5 absolute text-type-secondary" />
@@ -30,7 +30,7 @@ defineProps({
 		type: String,
 		required: true,
 	},
-	details: {
+	content: {
 		type: String,
 		required: false,
 	}
