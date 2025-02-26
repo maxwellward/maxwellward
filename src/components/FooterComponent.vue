@@ -4,7 +4,10 @@
 			<a href="https://github.com/maxwellward" target="_blank"
 				class="hover:underline decoration-dotted">Github</a>
 		</div>
-		<p class="flex justify-center mt-3 text-sm font-semibold">© {{ date }} - Maxwell Ward</p>
+		<router-link :to="{ name: 'admin' }"
+			class="hover:cursor-default flex justify-center mt-3 text-sm font-semibold">
+			© {{ date }} - Maxwell Ward
+		</router-link>
 	</div>
 </template>
 

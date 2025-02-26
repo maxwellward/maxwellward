@@ -1,17 +1,14 @@
 <template>
-	<div id="app">
 
-		<body>
-			<div class="-z-9999 fixed size-full invisible lg:visible" />
-			<header>
-				<HeaderComponent />
-			</header>
-			<router-view id="main" />
-			<footer>
-				<FooterComponent />
-			</footer>
-		</body>
-	</div>
+	<body id="app">
+		<header>
+			<HeaderComponent />
+		</header>
+		<router-view id="main" />
+		<footer>
+			<FooterComponent />
+		</footer>
+	</body>
 </template>
 
 <script lang="ts" setup>
