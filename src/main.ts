@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import './main.css';
 import App from './App.vue';
 import './assets/tailwind.css';
+import './assets/markdown.css';
 import router from './router';
 import { initializeApp } from 'firebase/app'
 import { createPinia } from 'pinia'

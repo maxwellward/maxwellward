@@ -38,17 +38,15 @@
 
 			<div class="w-full">
 				<p class="font-semibold font-mono text-lg mb-1">Writeup Content</p>
-				<textarea name="markdown editor" id="markdown-editor"
-					class="w-full border border-type-secondary py-1 px-2 rounded-md"
-					v-model="activeProject.content"></textarea>
+				<m-markdown-editor v-model="activeProject.content" />
 			</div>
 
 			<div class="flex flex-col items-center space-y-6 w-full">
-				<button @click="saveProject" :disabled="loading"
+				<button @click="save" :disabled="loading"
 					:class="[loading ? 'text-type-secondary' : 'text-type-primary', 'border border-type-secondary rounded-md py-1 px-4 cursor-pointer w-fit']">
 					<p class="font-mono font-bold">Save</p>
 				</button>
-				<button @click="deleteProject" :disabled="loading"
+				<button @click="remove" :disabled="loading"
 					:class="[loading ? 'text-type-secondary' : 'text-type-primary', 'border border-type-secondary rounded-md px-2 py-0.5 cursor-pointer w-fit']">
 					<p class="font-mono text-xs font-bold text-red-400">Delete</p>
 				</button>
@@ -61,22 +59,24 @@
 import { onMounted, ref } from 'vue';
 import { ProjectType, useProjectStore } from '@/modules/projects/store/projectStore';
 import { PlusIcon } from '@heroicons/vue/24/solid';
-import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { db } from '@/main';
+import mMarkdownEditor from '@/components/m-markdown-editor.vue';
 
 const loading = ref(false);
 
 const projectStore = useProjectStore();
 const activeProject = ref<ProjectType>();
 
-const projects = ref<ProjectType[]>();
+const projects = ref<ProjectType[]>([...projectStore.getProjects]);
 
 onMounted(async () => {
-	if (!projectStore.getLoaded) {
-		await projectStore.fetchProjects();
-	}
+	console.log(1);
 
-	projects.value = [...projectStore.getProjects];
+	if (!projectStore.getLoaded) {
+		console.log(2);
+
+		await projectStore.fetchProjects();
+		projects.value = [...projectStore.getProjects];
+	}
 })
 
 const createNewProject = () => {
@@ -89,36 +89,34 @@ const createNewProject = () => {
 	}
 }
 
-const saveProject = async () => {
+const save = async () => {
 	if (!activeProject.value) return;
-	loading.value = true;
-	const p = { ...activeProject.value };
 
-	if (!p.id) {
-		await addDoc(collection(db, "projects"), {
-			...p
-		});
-	} else {
-		await setDoc(doc(db, "projects", p.id), {
-			...p
-		});
+	try {
+		loading.value = true;
+		const p = { ...activeProject.value };
+		await projectStore.saveProject(p)
+		projects.value = [...projectStore.getProjects];
+		activeProject.value = undefined;
+	} catch (error) {
+		console.error(error);
+	} finally {
+		loading.value = false;
 	}
-
-	await projectStore.fetchProjects();
-	projects.value = [...projectStore.getProjects];
-	activeProject.value = undefined;
-	loading.value = false;
 }
 
-const deleteProject = async () => {
+const remove = async () => {
 	if (!activeProject.value?.id) return;
 
-	loading.value = true;
-	await deleteDoc(doc(db, "projects", activeProject.value.id));
-	await projectStore.fetchProjects();
-	projects.value = [...projectStore.getProjects];
-	activeProject.value = undefined;
-	loading.value = false;
-
+	try {
+		loading.value = true;
+		await projectStore.deleteProject(activeProject.value.id);
+		projects.value = [...projectStore.getProjects];
+		activeProject.value = undefined;
+	} catch (error) {
+		console.error(error);
+	} finally {
+		loading.value = false;
+	}
 }
 </script>

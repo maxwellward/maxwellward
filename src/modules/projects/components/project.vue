@@ -23,10 +23,5 @@ interface Props {
 	project: ProjectType;
 }
 
-const props = defineProps<Props>();
-
-onMounted(() => {
-	console.log(props.project.id);
-
-});
+defineProps<Props>();
 </script>

@@ -5,7 +5,7 @@
 				<ArrowLongLeftIcon class="size-6" />
 				<p class="text-sm">Back</p>
 			</router-link>
-			<h1 class="text-white font-bold text-3xl">{{ projectData.title }}</h1>
+			<h1 class="text-white font-bold text-3xl">{{ projectData.name }}</h1>
 			<a :href="projectData.link" target="_blank" rel="noreferrer"
 				class="flex items-center gap-1 text-[#d1d1d1] hover:text-white transition">
 				<div class="size-4">
@@ -17,7 +17,7 @@
 				<p class="text-sm font-semibold mt-0.5">View on Github</p>
 			</a>
 			<div class="text-white mt-6">
-				<div v-html="detailsHtml" class="flex flex-col space-y-3 markdown" />
+				<div v-html="detailsHtml" class="flex flex-col space-y-3 markdown-body" />
 			</div>
 		</div>
 	</div>
@@ -58,17 +58,3 @@ onMounted(async () => {
 	detailsHtml.value = await marked.parse(detailsStringWithNewlines || '');
 })
 </script>
-
-<style>
-.markdown a {
-	color: #00a9e0;
-}
-
-.markdown a:hover {
-	color: #0077b6;
-}
-
-.markdown img {
-	border-radius: 12px;
-}
-</style>
