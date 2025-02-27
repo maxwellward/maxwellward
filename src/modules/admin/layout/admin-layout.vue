@@ -1,6 +1,6 @@
 <template>
 	<router-view />
-	<button @click="logout" class="w-full mt-auto flex justify-center">
+	<button @click="logout" class="w-full mt-12 flex justify-center">
 		<p class="font-mono text-xs text-white">Logout</p>
 	</button>
 </template>

@@ -20,7 +20,7 @@ const routes = [
 		component: Projects,
 	},
 	{
-		path: '/projects/:project',
+		path: '/projects/:projectId',
 		props: true,
 		name: 'project-details',
 		component: ProjectDetails,
@@ -57,8 +57,6 @@ router.beforeEach(async (to, _, next) => {
 	if (to.meta.requiresAuth) {
 		const auth = getAuth(firebase);
 		await auth.authStateReady();
-
-		console.log(auth.currentUser);
 
 		const isAuthenticated = auth.currentUser;
 		if (!isAuthenticated) {
