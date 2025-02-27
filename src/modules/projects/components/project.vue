@@ -17,7 +17,6 @@
 <script lang="ts" setup>
 import { CodeBracketSquareIcon, ArrowTopRightOnSquareIcon, ArrowLongRightIcon } from '@heroicons/vue/24/outline';
 import { ProjectType } from '../store/projectStore';
-import { onMounted } from 'vue';
 
 interface Props {
 	project: ProjectType;
