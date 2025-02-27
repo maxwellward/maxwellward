@@ -26,8 +26,6 @@ export const projects: Project[] = [
 		type: 'contribution'
 	},
 	// Own projects
-
-	// THIS IS IN FIRESTORE NOW
 	{
 		title: 'This website!',
 		description: 'My portfolio, used to show off my projects and what I get up to.',

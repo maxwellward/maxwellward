@@ -12,33 +12,47 @@
 				}}</button>
 			</li>
 		</ul>
-		<div v-if="activeProject" class="text-white font-sans space-y-2 w-3/4">
+		<div v-if="activeProject" class="text-white font-sans space-y-2 w-3/4 sm:w-1/2">
 			<div>
-				<p>Title</p>
-				<input type="text" class="w-full" v-model="activeProject.name">
+				<p class="font-semibold font-mono text-lg mb-1">Title</p>
+				<input type="text" class="w-full border border-type-secondary py-1 px-2 rounded-md"
+					v-model="activeProject.name">
 			</div>
 			<div>
-				<p>Description (in card)</p>
-				<input type="text" class="w-full" v-model="activeProject.description">
+				<p class="font-semibold font-mono text-lg mb-1">Description (in card)</p>
+				<input type="text" class="w-full border border-type-secondary py-1 px-2 rounded-md"
+					v-model="activeProject.description">
 			</div>
 			<div>
-				<p>Link</p>
-				<input type="text" class="w-full" v-model="activeProject.link">
+				<p class="font-semibold font-mono text-lg mb-1">Link</p>
+				<input type="text" class="w-full border border-type-secondary py-1 px-2 rounded-md"
+					v-model="activeProject.link">
 			</div>
 			<div>
-				<p>Type</p>
-				<select v-model="activeProject.type" class="w-full">
+				<p class="font-semibold font-mono text-lg mb-1">Type</p>
+				<select v-model="activeProject.type" class="w-full border border-type-secondary py-1 px-2 rounded-md">
 					<option value="own">Personal</option>
 					<option value="opensource">Open Source</option>
 				</select>
 			</div>
+
 			<div class="w-full">
-				<p class="text-white">Writeup Content</p>
-				<textarea name="markdown editor" id="markdown-editor" class="w-full"
+				<p class="font-semibold font-mono text-lg mb-1">Writeup Content</p>
+				<textarea name="markdown editor" id="markdown-editor"
+					class="w-full border border-type-secondary py-1 px-2 rounded-md"
 					v-model="activeProject.content"></textarea>
 			</div>
-			<button @click="saveProject" :disabled="loading"
-				:class="[loading ? 'text-type-secondary' : 'text-type-primary']">Save</button>
+
+			<div class="flex flex-col items-center space-y-6 w-full">
+				<button @click="saveProject" :disabled="loading"
+					:class="[loading ? 'text-type-secondary' : 'text-type-primary', 'border border-type-secondary rounded-md py-1 px-4 cursor-pointer w-fit']">
+					<p class="font-mono font-bold">Save</p>
+				</button>
+				<button @click="deleteProject" :disabled="loading"
+					:class="[loading ? 'text-type-secondary' : 'text-type-primary', 'border border-type-secondary rounded-md px-2 py-0.5 cursor-pointer w-fit']">
+					<p class="font-mono text-xs font-bold text-red-400">Delete</p>
+				</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -47,7 +61,7 @@
 import { onMounted, ref } from 'vue';
 import { ProjectType, useProjectStore } from '@/modules/projects/store/projectStore';
 import { PlusIcon } from '@heroicons/vue/24/solid';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '@/main';
 
 const loading = ref(false);
@@ -94,5 +108,17 @@ const saveProject = async () => {
 	projects.value = [...projectStore.getProjects];
 	activeProject.value = undefined;
 	loading.value = false;
+}
+
+const deleteProject = async () => {
+	if (!activeProject.value?.id) return;
+
+	loading.value = true;
+	await deleteDoc(doc(db, "projects", activeProject.value.id));
+	await projectStore.fetchProjects();
+	projects.value = [...projectStore.getProjects];
+	activeProject.value = undefined;
+	loading.value = false;
+
 }
 </script>
