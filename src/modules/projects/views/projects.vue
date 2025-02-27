@@ -21,6 +21,9 @@
 import Project from '@/modules/projects/components/project.vue';
 import { onMounted, ref } from 'vue';
 import { ProjectType, useProjectStore } from '../store/projectStore';
+import router from '@/router';
+import { firebase } from '@/main';
+import { getAuth } from 'firebase/auth';
 
 const projectStore = useProjectStore();
 
@@ -28,12 +31,21 @@ const openSource = ref<ProjectType[]>([]);
 const personal = ref<ProjectType[]>([]);
 
 onMounted(async () => {
+	if (router.currentRoute.value.query.reordering) {
+		const auth = getAuth(firebase);
+		await auth.authStateReady();
+
+		const isAuthenticated = auth.currentUser;
+		if (!isAuthenticated) {
+			router.push({ name: 'auth' });
+		}
+	};
+
 	if (!projectStore.getLoaded) {
 		await projectStore.fetchProjects();
 	}
 
 	const projects = projectStore.getProjects;
-
 
 	personal.value = projects.filter((project) => project.type === 'own');
 	openSource.value = projects.filter((project) => project.type === 'opensource');
