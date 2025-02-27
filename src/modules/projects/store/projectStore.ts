@@ -4,7 +4,7 @@ import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 
 export type ProjectType = {
-	id: string,
+	id?: string,
 	name: string,
 	description: string,
 	link: string,
@@ -13,11 +13,10 @@ export type ProjectType = {
 }
 
 export const useProjectStore = defineStore('projects', () => {
-	const projects = ref<ProjectType[]>([])
-	const loaded = ref(false)
+	const projects = ref<ProjectType[]>([]);
+	const loaded = ref(false);
 
-	const getOpenSourceProjects = computed((): ProjectType[] => projects.value.filter((project) => project.type === 'opensource'))
-	const getPersonalProjects = computed((): ProjectType[] => projects.value.filter((project) => project.type === 'own'))
+	const getProjects = computed((): ProjectType[] => projects.value);
 	const getLoaded = computed(() => loaded.value)
 
 	async function fetchProjects() {
@@ -26,7 +25,7 @@ export const useProjectStore = defineStore('projects', () => {
 			const data = doc.data();
 
 			return {
-				id: data.id,
+				id: doc.id,
 				name: data.name,
 				description: data.description,
 				link: data.link,
@@ -38,5 +37,5 @@ export const useProjectStore = defineStore('projects', () => {
 		loaded.value = true;
 	}
 
-	return { projects, getOpenSourceProjects, getPersonalProjects, fetchProjects, getLoaded }
+	return { projects, getProjects, fetchProjects, getLoaded }
 })

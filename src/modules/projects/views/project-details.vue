@@ -25,28 +25,37 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { projects } from '@/data/projects';
 import { ArrowLongLeftIcon } from '@heroicons/vue/24/outline';
 import { marked } from 'marked';
+import { ProjectType, useProjectStore } from '../store/projectStore';
 
 interface Props {
-	project: string;
+	projectId: string;
 }
 
 const props = defineProps<Props>();
+const projectStore = useProjectStore();
 
-
-marked.use({
-	breaks: true
-});
-
-
-const projectData = ref();
+const projectData = ref<ProjectType>();
 const detailsHtml = ref('');
 
+marked.use({
+	breaks: true,
+	gfm: true
+});
+
 onMounted(async () => {
-	projectData.value = projects.find((project) => project.title === props.project);
-	detailsHtml.value = await marked.parse(projectData.value.details)
+	if (!projectStore.getLoaded) {
+		await projectStore.fetchProjects();
+	}
+
+	const projects = projectStore.getProjects;
+	const index = projects.findIndex((project) => project.id === props.projectId);
+	projectData.value = projects[index];
+
+	const detailsStringWithNewlines = projectData.value?.content.replace(/\\n/g, '\n') || '';
+
+	detailsHtml.value = await marked.parse(detailsStringWithNewlines || '');
 })
 </script>
 

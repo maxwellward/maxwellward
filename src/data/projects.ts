@@ -29,19 +29,6 @@ export const projects: Project[] = [
 
 	// THIS IS IN FIRESTORE NOW
 	{
-		title: 'Dogspotter',
-		description: 'A mobile game based around taking photos of dogs in real life to gain points and climb the leaderboard.',
-		link: 'https://github.com/maxwellward/dogspotter-mobile',
-		type: 'own',
-		details: "Dogspotter is a mobile-first game where players compete to spot and photograph the most dogs in the real world. Photos are submitted via a mobile app designed with Expo & React Native, and are reviewed on the web by the Dogspotter team on a reviewer panel designed with VueJS.\n\nDogspotter was initially a Discord game that used a bot to assign scores using a Google object-classifier model. But after hitting limitations with the platform and knowing that using Discord hurts the user experience and reachability (not everyone has Discord, i.e. my mother!), I created the mobile app and the infrastructure surrounding it.\n\nYou can find the original Discord bot [here](https://github.com/maxwellward/Dogspotter). You can also join the [Discord server](https://discord.gg/JFGsuaR3pG).\n\n![Example of the Dogspotter Discord bot](https://i.imgur.com/BAZltGp.png)\n\nThe original bot used Firebase as its backend, and while convienient, would eventually lead to challenges with storing a large amount of images (even if they're compressed). Due to this limitation, when creating the mobile app I hosted a [Pocketbase](https://pocketbase.io/) instance on my Homelab, as storage space is much less of a concern there."
-	},
-	{
-		title: 'Pokémon GO Data Viewer',
-		description: 'Data visualiser for Pokémon GO data packages.',
-		link: 'https://github.com/maxwellward/pogo-dump-viewer',
-		type: 'own'
-	},
-	{
 		title: 'This website!',
 		description: 'My portfolio, used to show off my projects and what I get up to.',
 		link: 'https://github.com/maxwellward/maxwellward',
