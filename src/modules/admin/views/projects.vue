@@ -82,7 +82,7 @@ const createNewProject = () => {
 		link: '',
 		type: 'own',
 		content: '',
-		order: projects.value.length;
+		order: projects.value.length,
 	}
 }
 
