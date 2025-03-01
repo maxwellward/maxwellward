@@ -9,7 +9,8 @@ import { createPinia } from 'pinia'
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+	// This key is NOT private and is safe to embed here: https://firebase.google.com/support/guides/security-checklist#understand-api-keys
+	apiKey: "AIzaSyDM-z-uz3M4vh1U9jVuAYYycEaNyZqwVC8",
 	authDomain: "portfolio-42e1a.firebaseapp.com",
 	projectId: "portfolio-42e1a",
 	storageBucket: "portfolio-42e1a.firebasestorage.app",
