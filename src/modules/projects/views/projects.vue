@@ -2,17 +2,23 @@
 	<div class="w-full flex flex-col items-center relative mt-[3%]">
 		<div class="h-fit w-5/6">
 			<h1 class="text-type-primary font-bold text-4xl mb-5 xs:mb-10">My Projects</h1>
-			<div
+			<draggable :disabled="!canReorder" v-model="personal" @start="dragging = true" @end="endDrag()"
+				item-key="id" ghost-class="blur-xs"
 				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-8 xs:gap-16 w-full justify-center xs:justify-normal py-8">
-				<Project v-for="project in personal" :key="project.id" :project="project" />
-			</div>
+				<template #item="{ element }">
+					<Project :key="element.id" :project="element" />
+				</template>
+			</draggable>
 		</div>
 		<div class="h-fit w-5/6 mt-12">
 			<h1 class="text-type-primary font-bold text-4xl mb-5 xs:mb-10">Open Source Contributions</h1>
-			<div
+			<draggable :disabled="!canReorder" v-model="openSource" @start="dragging = true" @end="endDrag()"
+				item-key="id" ghost-class="blur-xs"
 				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-8 xs:gap-16 w-full justify-center xs:justify-normal py-8">
-				<Project v-for="project in openSource" :key="project.id" :project="project" />
-			</div>
+				<template #item="{ element }">
+					<Project :key="element.id" :project="element" />
+				</template>
+			</draggable>
 		</div>
 	</div>
 </template>
@@ -22,13 +28,18 @@ import Project from '@/modules/projects/components/project.vue';
 import { onMounted, ref } from 'vue';
 import { ProjectType, useProjectStore } from '../store/projectStore';
 import router from '@/router';
-import { firebase } from '@/main';
+import { db, firebase } from '@/main';
 import { getAuth } from 'firebase/auth';
+import draggable from 'vuedraggable'
+import { doc, writeBatch } from 'firebase/firestore';
 
 const projectStore = useProjectStore();
 
 const openSource = ref<ProjectType[]>([]);
 const personal = ref<ProjectType[]>([]);
+
+const dragging = ref(false);
+const canReorder = ref(false);
 
 onMounted(async () => {
 	if (router.currentRoute.value.query.reordering) {
@@ -38,6 +49,8 @@ onMounted(async () => {
 		const isAuthenticated = auth.currentUser;
 		if (!isAuthenticated) {
 			router.push({ name: 'auth' });
+		} else {
+			canReorder.value = true;
 		}
 	};
 
@@ -47,10 +60,42 @@ onMounted(async () => {
 
 	const projects = projectStore.getProjects;
 
-	personal.value = projects.filter((project) => project.type === 'own');
-	openSource.value = projects.filter((project) => project.type === 'opensource');
+	personal.value = projects.filter((project) => project.type === 'own').sort((a, b) => a.order - b.order);
+	openSource.value = projects.filter((project) => project.type === 'opensource').sort((a, b) => a.order - b.order);
+});
 
-})
+const endDrag = () => {
+	dragging.value = false;
+	console.log(personal.value);
+	let projects = [...personal.value, ...openSource.value];
+
+	projects = projects.map((project, index) => {
+		project.order = index;
+		return project;
+	});
+
+	updateDocuments(projects);
+};
+
+let timeoutId: NodeJS.Timeout;
+const updateDocuments = async (projects: ProjectType[]) => {
+	clearTimeout(timeoutId);
+
+	timeoutId = setTimeout(async () => {
+		const batch = writeBatch(db);
+
+		projects.forEach(async (project) => {
+			if (!project.id) return;
+			const projectRef = doc(db, 'projects', project.id);
+			batch.update(projectRef, { order: project.order });
+		});
+
+		// Commit the batch
+		await batch.commit();
+
+		await projectStore.fetchProjects();
+	}, 3000);
+}
 
 </script>
 
