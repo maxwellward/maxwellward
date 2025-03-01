@@ -4,6 +4,7 @@
   --color-primary: #161618;
   --color-secondary: #1f1d29;
   --color-card: #161618;
+  --color-card-disabled: #3d3d3f;
   --color-cardborder: #262629;
 
   --color-type-primary: #ffffff;
@@ -30,6 +31,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,

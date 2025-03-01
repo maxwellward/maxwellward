@@ -10,6 +10,7 @@ export type ProjectType = {
 	link: string,
 	content: string,
 	type: 'own' | 'opensource';
+	order: number;
 }
 
 export const useProjectStore = defineStore('projects', () => {
@@ -41,6 +42,7 @@ export const useProjectStore = defineStore('projects', () => {
 				link: data.link,
 				content: data.content,
 				type: data.type,
+				order: data.order,
 			}
 		})
 
@@ -57,11 +59,10 @@ export const useProjectStore = defineStore('projects', () => {
 	 * @returns {Promise<void>}
 	 */
 	async function saveProject(project: ProjectType) {
-		console.log(project);
-
 		if (!project.id) {
 			await addDoc(collection(db, "projects"), {
-				...project
+				...project,
+				order: projects.value.length
 			});
 			projects.value = [...projects.value, project];
 		} else {

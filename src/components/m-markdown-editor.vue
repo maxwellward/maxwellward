@@ -36,11 +36,11 @@ const model = defineModel({
 });
 
 // Editor state
-const editorRef = ref(null);
+const editorRef = ref<HTMLTextAreaElement | null>(null);
 const previewMode = ref(false);
 
 // Format functions
-const insertFormatting = (prefix, suffix = '') => {
+const insertFormatting = (prefix: string, suffix = '') => {
 	const textarea = editorRef.value;
 	if (!textarea) return;
 
@@ -66,7 +66,7 @@ const insertFormatting = (prefix, suffix = '') => {
 // Formatting helpers
 const applyBold = () => insertFormatting('**', '**');
 const applyItalic = () => insertFormatting('*', '*');
-const applyHeader = (level) => insertFormatting('#'.repeat(level) + ' ');
+const applyHeader = (level: number) => insertFormatting('#'.repeat(level) + ' ');
 const applyLink = () => insertFormatting('[', '](url)');
 const applyImage = () => insertFormatting('![alt text](', ')');
 const applyBulletList = () => insertFormatting('- ');
@@ -78,7 +78,7 @@ const applyHorizontalRule = () => insertFormatting('---\n');
 const applySubscript = () => insertFormatting('<sub>', '</sub>');
 
 // Preview rendering
-const renderMarkdown = (text) => {
+const renderMarkdown = (text: string) => {
 	if (!text) return '';
 
 	let html = text
