@@ -70,7 +70,6 @@ window.addEventListener('beforeunload', function (e) {
 
 const endDrag = () => {
 	dragging.value = false;
-	console.log(personal.value);
 	let projects = [...personal.value, ...openSource.value];
 
 	projects = projects.map((project, index) => {

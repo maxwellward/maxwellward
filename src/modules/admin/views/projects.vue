@@ -69,11 +69,7 @@ const activeProject = ref<ProjectType>();
 const projects = ref<ProjectType[]>([...projectStore.getProjects]);
 
 onMounted(async () => {
-	console.log(1);
-
 	if (!projectStore.getLoaded) {
-		console.log(2);
-
 		await projectStore.fetchProjects();
 		projects.value = [...projectStore.getProjects];
 	}
@@ -85,7 +81,8 @@ const createNewProject = () => {
 		description: '',
 		link: '',
 		type: 'own',
-		content: ''
+		content: '',
+		order: projects.value.length;
 	}
 }
 
