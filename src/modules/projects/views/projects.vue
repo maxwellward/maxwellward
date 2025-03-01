@@ -64,6 +64,10 @@ onMounted(async () => {
 	openSource.value = projects.filter((project) => project.type === 'opensource').sort((a, b) => a.order - b.order);
 });
 
+window.addEventListener('beforeunload', function (e) {
+	if (waitingToSync.value) e.preventDefault();
+});
+
 const endDrag = () => {
 	dragging.value = false;
 	console.log(personal.value);
@@ -78,9 +82,11 @@ const endDrag = () => {
 };
 
 let timeoutId: NodeJS.Timeout;
+const waitingToSync = ref(false);
 const updateDocuments = async (projects: ProjectType[]) => {
 	clearTimeout(timeoutId);
 
+	waitingToSync.value = true;
 	timeoutId = setTimeout(async () => {
 		const batch = writeBatch(db);
 
@@ -94,7 +100,8 @@ const updateDocuments = async (projects: ProjectType[]) => {
 		await batch.commit();
 
 		await projectStore.fetchProjects();
-	}, 3000);
+		waitingToSync.value = false;
+	}, 2500);
 }
 
 </script>
