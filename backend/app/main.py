@@ -4,11 +4,25 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import firebase_admin
 from firebase_admin import credentials
+from fastapi.middleware.cors import CORSMiddleware
 
 from routes import router
 
+origins = [
+    "https://maxward.ca",
+    "http://localhost",
+    "http://localhost:5173",
+]
+
 app = FastAPI(title="Portfolio Media API")
 app.include_router(router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 cred = credentials.Certificate("portfolio-42e1a-firebase-adminsdk-fbsvc-66ded85cba.json")
 firebase_admin.initialize_app(cred)

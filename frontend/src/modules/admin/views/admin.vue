@@ -11,6 +11,10 @@
 				<router-link :to="{ name: 'projects', query: { reordering: 'true' } }">Reorder Projects</router-link>
 				<ArrowLongRightIcon class="size-6" />
 			</li>
+			<li class="flex items-center gap-1 hover:underline">
+				<router-link :to="{ name: 'media' }">Media Management</router-link>
+				<ArrowLongRightIcon class="size-6" />
+			</li>
 		</ul>
 	</div>
 </template>

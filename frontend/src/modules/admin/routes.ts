@@ -1,6 +1,7 @@
 import Projects from "@/modules/admin/views/projects.vue";
 import AdminLayout from "./layout/admin-layout.vue";
 import Admin from "@/modules/admin/views/admin.vue";
+import Media from "@/modules/admin/views/media.vue";
 
 export const adminRoutes = [
 	{
@@ -21,6 +22,11 @@ export const adminRoutes = [
 				path: 'projects',
 				name: 'project-editor',
 				component: Projects,
+			},
+			{
+				path: 'media',
+				name: 'media',
+				component: Media,
 			}
 		]
 	},
