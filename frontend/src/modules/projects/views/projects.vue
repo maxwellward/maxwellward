@@ -2,9 +2,14 @@
 	<div class="w-full flex flex-col items-center relative mt-[3%]">
 		<div class="h-fit w-5/6">
 			<h1 class="text-type-primary font-bold text-4xl mb-5 xs:mb-10">My Projects</h1>
-			<draggable :disabled="!canReorder" v-model="personal" @start="dragging = true" @end="endDrag()"
+			<div v-if="loading"
+				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-8">
+				<div v-for="i in 3" :key="i"
+					class="group bg-card/80 border-2 border-cardborder/80 rounded-xl h-32 animate-pulse w-1/4 min-w-[250px] p-3" />
+			</div>
+			<draggable v-else :disabled="!canReorder" v-model="personal" @start="dragging = true" @end="endDrag()"
 				item-key="id" ghost-class="blur-xs"
-				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-8 xs:gap-16 w-full justify-center xs:justify-normal py-8">
+				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-8">
 				<template #item="{ element }">
 					<Project :key="element.id" :project="element" />
 				</template>
@@ -12,9 +17,14 @@
 		</div>
 		<div class="h-fit w-5/6 mt-12">
 			<h1 class="text-type-primary font-bold text-4xl mb-5 xs:mb-10">Open Source Contributions</h1>
-			<draggable :disabled="!canReorder" v-model="openSource" @start="dragging = true" @end="endDrag()"
+			<div v-if="loading"
+				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-8">
+				<div v-for="i in 3" :key="i"
+					class="group bg-card/80 border-2 border-cardborder/80 rounded-xl h-32 animate-pulse w-1/4 min-w-[250px] p-3" />
+			</div>
+			<draggable v-else :disabled="!canReorder" v-model="openSource" @start="dragging = true" @end="endDrag()"
 				item-key="id" ghost-class="blur-xs"
-				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-8 xs:gap-16 w-full justify-center xs:justify-normal py-8">
+				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-8">
 				<template #item="{ element }">
 					<Project :key="element.id" :project="element" />
 				</template>
@@ -40,6 +50,7 @@ const personal = ref<ProjectType[]>([]);
 
 const dragging = ref(false);
 const canReorder = ref(false);
+const loading = ref(true);
 
 onMounted(async () => {
 	if (router.currentRoute.value.query.reordering) {
@@ -59,6 +70,7 @@ onMounted(async () => {
 	}
 
 	const projects = projectStore.getProjects;
+	loading.value = false;
 
 	personal.value = projects.filter((project) => project.type === 'own').sort((a, b) => a.order - b.order);
 	openSource.value = projects.filter((project) => project.type === 'opensource').sort((a, b) => a.order - b.order);
