@@ -1,0 +1,1 @@
+A good guide on setting up a virtual environment for this project is here: https://fastapi.tiangolo.com/virtual-environments/

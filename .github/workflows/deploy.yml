@@ -16,8 +16,14 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
-      - name: Build and push Docker image
+      - name: Build and push frontend Docker image
         run: |
           IMAGE_NAME=ghcr.io/${{ secrets.GHCR_USERNAME }}/portfolio:latest
-          docker build -t $IMAGE_NAME .
+          docker build -t $IMAGE_NAME ./frontend
+          docker push $IMAGE_NAME
+      
+      - name: Build and push backend Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ secrets.GHCR_USERNAME }}/portfolio-image-api:latest
+          docker build -t $IMAGE_NAME ./backend
           docker push $IMAGE_NAME
