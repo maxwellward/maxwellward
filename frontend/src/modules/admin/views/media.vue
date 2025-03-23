@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: Clean up-->
 	<div class="media-upload-container">
 		<h1 class="text-white">Media Upload</h1>
 		<p class="text-white">Link: {{ uploadedUrl }}</p>

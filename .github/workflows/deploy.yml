@@ -16,7 +16,8 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env
-          echo VITE_FIREBASE_API_KEY="${{ vars.VITE_FIREBASE_API_KEY }}" >> .env
+          echo VITE_APP_ENVIRONMENT="${{ vars.ENVIRONMENT }}" >> .env
+          echo VITE_APP_BACKEND_URL="${{ vars.BACKEND_URL }}" >> .env
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin

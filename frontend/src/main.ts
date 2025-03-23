@@ -22,6 +22,6 @@ const firebaseConfig = {
 export const firebase = initializeApp(firebaseConfig);
 export const db = getFirestore(firebase);
 
-const pinia = createPinia()
+const pinia = createPinia();
 
 createApp(App).use(router).use(pinia).mount('#app');
