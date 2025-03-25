@@ -2,13 +2,14 @@ import { db } from "@/main";
 import { getDocs, collection, addDoc, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
+import { Timestamp } from '@firebase/firestore-types';
 
 export type PostType = {
 	id?: string,
 	title: string,
 	description: string,
 	content: string,
-	date: Date;
+	date: Timestamp;
 }
 
 export const usePostStore = defineStore('posts', () => {

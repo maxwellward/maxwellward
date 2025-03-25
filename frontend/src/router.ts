@@ -42,7 +42,7 @@ const routes = [
 		component: Post,
 	},
 	{
-		path: '/posts/:?postId',
+		path: '/posts/edit/:postId?',
 		props: true,
 		name: 'post-editor',
 		component: PostEditor,

@@ -12,8 +12,9 @@
 				<div v-for="i in 3" :key="i"
 					class="group bg-card/80 border-2 border-cardborder/80 rounded-xl h-32 animate-pulse w-1/4 min-w-[250px] p-3" />
 			</div>
-			<div v-for="post in posts" :key="post.id">
-				<PostCard :post="post" />
+			<div
+				class="size-full flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-6">
+				<PostCard :post="post" v-for="post in posts" :key="post.id" />
 			</div>
 		</div>
 	</div>
