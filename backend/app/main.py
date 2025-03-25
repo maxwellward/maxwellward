@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-cred = credentials.Certificate("portfolio-42e1a-firebase-adminsdk-fbsvc-66ded85cba.json")
+cred = credentials.Certificate("credentials/firebase-admin-credentials.json")
 firebase_admin.initialize_app(cred)
 
 class Item(BaseModel):
