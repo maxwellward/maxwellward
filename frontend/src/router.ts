@@ -7,6 +7,9 @@ import Login from './modules/auth/views/login.vue';
 import { adminRoutes } from './modules/admin/routes';
 import { getAuth } from 'firebase/auth';
 import { firebase } from './main';
+import Posts from './modules/posts/views/posts.vue';
+import Post from './modules/posts/views/post.vue';
+import PostEditor from './modules/posts/views/post-editor.vue';
 
 const routes = [
 	{
@@ -25,6 +28,24 @@ const routes = [
 		props: true,
 		name: 'project-details',
 		component: ProjectDetails,
+	},
+	{
+		path: '/posts',
+		name: 'posts',
+		component: Posts,
+		props: true,
+	},
+	{
+		path: '/posts/:postId',
+		props: true,
+		name: 'post',
+		component: Post,
+	},
+	{
+		path: '/posts/:?postId',
+		props: true,
+		name: 'post-editor',
+		component: PostEditor,
 	},
 	{
 		path: '/auth',

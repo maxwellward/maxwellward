@@ -18,8 +18,8 @@
 				class="absolute right-7 mt-2 w-48 bg-secondary text-type-primary rounded-md shadow-lg text-sm"
 				@click="toggleDropdown">
 				<router-link :to="{ name: 'home' }" class="block px-5 py-3">home</router-link>
-				<!-- <router-link :to="{ name: 'about' }" class="block px-5 py-3">about</router-link> -->
 				<router-link :to="{ name: 'projects' }" class="block px-5 py-3">my work</router-link>
+				<router-link :to="{ name: 'posts' }" class="block px-5 py-3">posts</router-link>
 			</div>
 		</div>
 
@@ -27,11 +27,11 @@
 			<router-link :to="{ name: 'home' }">
 				<p class="font-bold text-type-secondary">home</p>
 			</router-link>
-			<!-- <router-link :to="{ name: 'about' }">
-				<p class="font-bold text-type-secondary">about</p>
-			</router-link> -->
 			<router-link :to="{ name: 'projects' }">
 				<p class="font-bold text-type-secondary">my work</p>
+			</router-link>
+			<router-link :to="{ name: 'posts' }">
+				<p class="font-bold text-type-secondary">posts</p>
 			</router-link>
 		</div>
 	</div>
