@@ -123,8 +123,10 @@ const uploadImage = async (file: File) => {
 		// Log the form data for demonstration
 		console.log('Uploading image:', file.name, 'Size:', file.size, 'Type:', file.type);
 
+		console.log(import.meta.env.VITE_APP_BACKEND_URL);
+
 		const { data } = await axios.post(
-			`${import.meta.env.BACKEND_URL}/media?name=${encodeURIComponent(file.name)}`,
+			`${import.meta.env.VITE_APP_BACKEND_URL}/media?name=${encodeURIComponent(file.name)}`,
 			formData,
 			{
 				headers: {
@@ -134,7 +136,7 @@ const uploadImage = async (file: File) => {
 			}
 		);
 
-		const imageUrl = `${import.meta.env.BACKEND_URL}/${data.url}`;
+		const imageUrl = `${import.meta.env.VITE_APP_BACKEND_URL}/${data.url}`;
 
 		// Insert the image markdown at current cursor position
 		const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
@@ -321,7 +323,7 @@ const togglePreview = () => {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 10;
+	z-index: -10;
 }
 
 .drop-message {
