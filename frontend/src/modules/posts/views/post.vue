@@ -49,6 +49,8 @@ const postData = ref<PostType>();
 const detailsHtml = ref('');
 const isAuthenticated = ref(false);
 
+//TODO: fix this
+// @ts-ignore
 marked.use(imagerowExtension, {
 	breaks: true,
 	gfm: true

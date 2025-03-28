@@ -41,6 +41,8 @@ const projectStore = useProjectStore();
 const projectData = ref<ProjectType>();
 const detailsHtml = ref('');
 
+// TODO: Fix this
+// @ts-ignore
 marked.use(imagerowExtension, {
 	breaks: true,
 	gfm: true
