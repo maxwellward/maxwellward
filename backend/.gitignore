@@ -1,0 +1,7 @@
+.vite
+__pycache__
+.venv
+node_modules
+app/media
+.DS_Store
+firebase-admin-credentials.json

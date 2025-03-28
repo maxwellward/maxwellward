@@ -21,7 +21,7 @@ export const adminRoutes = [
 				path: 'projects',
 				name: 'project-editor',
 				component: Projects,
-			}
+			},
 		]
 	},
 

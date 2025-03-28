@@ -1171,3 +1171,17 @@
 .markdown-body .highlight pre:has(+.zeroclipboard-container) {
 	min-height: 52px;
 }
+
+.markdown-body .image-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--base-size-16);
+	margin-top: var(--base-size-16);
+	margin-bottom: var(--base-size-16);
+}
+
+.markdown-body .image-row img {
+	flex: 1 1 calc(50% - var(--base-size-16));
+	max-width: calc(50% - var(--base-size-8));
+	object-fit: cover;
+}

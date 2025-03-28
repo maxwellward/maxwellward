@@ -20,24 +20,40 @@
 			</button>
 		</div>
 
-		<div class="editor-container">
+		<div class="editor-container" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave"
+			@drop.prevent="handleDrop">
+
+			<div v-if="isDragging" class="drag-overlay">
+				<div class="drop-message">Drop image to upload</div>
+			</div>
+
 			<textarea v-if="!previewMode" ref="editorRef" v-model="model" class="markdown-input"
 				placeholder="Write your markdown here..."></textarea>
 			<div v-else class="preview markdown-body" v-html="previewHtml"></div>
+
+			<div v-if="isUploading" class="upload-overlay">
+				<div class="upload-progress">Uploading image...</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import axios from 'axios';
+import { getAuth, getIdToken } from 'firebase/auth';
 import { ref, computed } from 'vue';
 
 const model = defineModel({
 	default: ''
 });
 
+const auth = getAuth();
+
 // Editor state
 const editorRef = ref<HTMLTextAreaElement | null>(null);
 const previewMode = ref(false);
+const isDragging = ref(false);
+const isUploading = ref(false);
 
 // Format functions
 const insertFormatting = (prefix: string, suffix = '') => {
@@ -61,6 +77,100 @@ const insertFormatting = (prefix: string, suffix = '') => {
 			start + prefix.length + selectedText.length
 		);
 	}, 0);
+};
+
+// Drag and drop functionality
+const handleDragOver = (event: DragEvent) => {
+	isDragging.value = true;
+	event.dataTransfer!.dropEffect = 'copy';
+};
+
+const handleDragLeave = () => {
+	isDragging.value = false;
+};
+
+const handleDrop = async (event: DragEvent) => {
+	isDragging.value = false;
+
+	const files = event.dataTransfer?.files;
+	if (!files || files.length === 0) return;
+
+	const file = files[0];
+
+	// Check if file is an image
+	if (!file.type.startsWith('image/')) {
+		alert('Only image files are supported for drag and drop');
+		return;
+	}
+
+	// Upload the image
+	await uploadImage(file);
+};
+
+// Dummy upload function
+const uploadImage = async (file: File) => {
+	try {
+		const user = auth.currentUser;
+		if (!user) throw 403;
+		const idToken = await getIdToken(user);
+
+		isUploading.value = true;
+
+		// Create form data
+		const formData = new FormData();
+		formData.append('file', file);
+
+		const { data } = await axios.post(
+			`${import.meta.env.VITE_APP_BACKEND_URL}/media?name=${encodeURIComponent(file.name)}`,
+			formData,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'Authorization': `Bearer ${idToken}`
+				}
+			}
+		);
+
+		const imageUrl = `${import.meta.env.VITE_APP_BACKEND_URL}/${data.url}`;
+
+		// Insert the image markdown at current cursor position
+		const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
+		insertImageMarkdown(imageUrl, fileName);
+
+		console.log('Image uploaded successfully!');
+	} catch (error) {
+		console.error('Error uploading image:', error);
+		alert('Failed to upload image');
+	} finally {
+		isUploading.value = false;
+	}
+};
+
+// Helper to insert image markdown at cursor position
+const insertImageMarkdown = (imageUrl: string, altText: string) => {
+	const markdown = `![${altText}](${imageUrl})`;
+
+	if (previewMode.value) {
+		// If in preview mode, just append to the end
+		model.value += '\n' + markdown;
+	} else {
+		// If in edit mode, insert at cursor position
+		const textarea = editorRef.value;
+		if (!textarea) return;
+
+		const cursorPos = textarea.selectionStart;
+		const textBefore = model.value.substring(0, cursorPos);
+		const textAfter = model.value.substring(cursorPos);
+
+		model.value = textBefore + markdown + textAfter;
+
+		// Reset cursor position after the inserted markdown
+		setTimeout(() => {
+			textarea.focus();
+			const newPosition = cursorPos + markdown.length;
+			textarea.setSelectionRange(newPosition, newPosition);
+		}, 0);
+	}
 };
 
 // Formatting helpers
@@ -195,5 +305,49 @@ const togglePreview = () => {
 	box-sizing: border-box;
 	font-size: 14px;
 	line-height: 1.5;
+}
+
+/* Drag and drop styles */
+.drag-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: -10;
+}
+
+.drop-message {
+	background-color: white;
+	padding: 20px;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+}
+
+.upload-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+}
+
+.upload-progress {
+	padding: 20px;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
 	<div class="w-full flex justify-center">
 		<div class="w-[80%] md:w-[60%] lg:w-1/2 mt-12" v-if="projectData">
-			<router-link to="/projects" class="text-gray-500 hover:text-gray-100 transition flex items-center gap-1">
+			<router-link :to="{ name: 'projects' }"
+				class="text-gray-500 hover:text-gray-100 transition flex items-center gap-1">
 				<ArrowLongLeftIcon class="size-6" />
 				<p class="text-sm">Back</p>
 			</router-link>
@@ -28,6 +29,7 @@ import { onMounted, ref } from 'vue';
 import { ArrowLongLeftIcon } from '@heroicons/vue/24/outline';
 import { marked } from 'marked';
 import { ProjectType, useProjectStore } from '../store/projectStore';
+import { imagerowExtension } from '@/markdown/imagerow';
 
 interface Props {
 	projectId: string;
@@ -39,7 +41,7 @@ const projectStore = useProjectStore();
 const projectData = ref<ProjectType>();
 const detailsHtml = ref('');
 
-marked.use({
+marked.use(imagerowExtension, {
 	breaks: true,
 	gfm: true
 });
