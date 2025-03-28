@@ -13,11 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 'Create env file'
+      - name: 'Create env files'
         run: |
           touch frontend/.env
-          echo VITE_APP_ENVIRONMENT="${{ vars.ENVIRONMENT }}" >> .env
-          echo VITE_APP_BACKEND_URL="${{ vars.BACKEND_URL }}" >> .env
+          echo VITE_APP_ENVIRONMENT="${{ vars.ENVIRONMENT }}" >> frontend/.env
+          echo VITE_APP_BACKEND_URL="${{ vars.BACKEND_URL }}" >> frontend/.env
+          touch backend/.env
+          echo MEDIA_DIR="${{ vars.MEDIA_DIRECTORY }}" >> backend/.env
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
