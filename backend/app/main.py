@@ -6,7 +6,7 @@ import firebase_admin
 from firebase_admin import credentials
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import router
+from app.routes import router
 
 origins = [
     "https://maxward.ca",

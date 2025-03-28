@@ -4,13 +4,13 @@
 # TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-from helpers import convert_heic_to_jpeg
+from app.helpers import convert_heic_to_jpeg
 from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from fastapi.responses import FileResponse
 import os
-from config import MEDIA_DIR
+from app.config import MEDIA_DIR
 from typing import List
-from dependencies import get_current_user
+from app.dependencies import get_current_user
 import time
 
 router = APIRouter()
