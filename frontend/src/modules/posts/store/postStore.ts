@@ -2,7 +2,7 @@ import { db } from "@/main";
 import { getDocs, collection, addDoc, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
-import { Timestamp } from '@firebase/firestore-types';
+import { Timestamp } from '@firebase/firestore';
 
 export type PostType = {
 	id?: string,
