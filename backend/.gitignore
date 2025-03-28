@@ -3,5 +3,7 @@ __pycache__
 .venv
 node_modules
 app/media
+app/__pycache__
+.env
 .DS_Store
 firebase-admin-credentials.json
