@@ -36,6 +36,7 @@ import { PostType, usePostStore } from '../store/postStore';
 import { firebase } from '@/main';
 import { getAuth } from 'firebase/auth';
 import router from '@/router';
+import { imagerowExtension } from '@/markdown/imagerow';
 
 interface Props {
 	postId: string;
@@ -48,7 +49,7 @@ const postData = ref<PostType>();
 const detailsHtml = ref('');
 const isAuthenticated = ref(false);
 
-marked.use({
+marked.use(imagerowExtension, {
 	breaks: true,
 	gfm: true
 });

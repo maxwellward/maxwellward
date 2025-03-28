@@ -29,6 +29,7 @@ import { onMounted, ref } from 'vue';
 import { ArrowLongLeftIcon } from '@heroicons/vue/24/outline';
 import { marked } from 'marked';
 import { ProjectType, useProjectStore } from '../store/projectStore';
+import { imagerowExtension } from '@/markdown/imagerow';
 
 interface Props {
 	projectId: string;
@@ -40,7 +41,7 @@ const projectStore = useProjectStore();
 const projectData = ref<ProjectType>();
 const detailsHtml = ref('');
 
-marked.use({
+marked.use(imagerowExtension, {
 	breaks: true,
 	gfm: true
 });

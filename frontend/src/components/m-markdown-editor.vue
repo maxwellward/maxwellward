@@ -120,11 +120,6 @@ const uploadImage = async (file: File) => {
 		const formData = new FormData();
 		formData.append('file', file);
 
-		// Log the form data for demonstration
-		console.log('Uploading image:', file.name, 'Size:', file.size, 'Type:', file.type);
-
-		console.log(import.meta.env.VITE_APP_BACKEND_URL);
-
 		const { data } = await axios.post(
 			`${import.meta.env.VITE_APP_BACKEND_URL}/media?name=${encodeURIComponent(file.name)}`,
 			formData,
