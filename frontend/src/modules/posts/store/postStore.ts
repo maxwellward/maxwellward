@@ -42,7 +42,10 @@ export const usePostStore = defineStore('posts', () => {
 				content: data.content,
 				date: data.date,
 			}
-		})
+		}).sort((a, b) => {
+			// Sort by timestamp in descending order (newest first)
+			return b.date.toMillis() - a.date.toMillis();
+		});
 
 		loaded.value = true;
 	}
