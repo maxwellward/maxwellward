@@ -19,9 +19,6 @@ export const imagerowExtension = {
 			},
 			renderer(token: { images: string; }) {
 				const images = extractImagesFromMarkdown(token.images);
-				console.log(images);
-
-
 				return `<div class="image-row">${images.map(img => `<img src="${img.url}" alt="${img.alt}">`).join("")}</div>`;
 			},
 		},

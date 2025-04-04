@@ -15,7 +15,7 @@
 				</svg>
 			</button>
 			<div v-if="isDropdownOpen"
-				class="absolute right-7 mt-2 w-48 bg-secondary text-type-primary rounded-md shadow-lg text-sm"
+				class="absolute right-7 mt-2 w-48 bg-card border-cardborder border text-type-primary rounded-md shadow-lg text-sm z-10"
 				@click="toggleDropdown">
 				<router-link :to="{ name: 'home' }" class="block px-5 py-3">home</router-link>
 				<router-link :to="{ name: 'projects' }" class="block px-5 py-3">my work</router-link>
