@@ -136,8 +136,6 @@ const uploadImage = async (file: File) => {
 		// Insert the image markdown at current cursor position
 		const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove file extension
 		insertImageMarkdown(imageUrl, fileName);
-
-		console.log('Image uploaded successfully!');
 	} catch (error) {
 		console.error('Error uploading image:', error);
 		alert('Failed to upload image');
