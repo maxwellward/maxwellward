@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { compressImage } from '@/helpers/compress-image';
 import axios from 'axios';
 import { getAuth, getIdToken } from 'firebase/auth';
 import { ref, computed } from 'vue';
@@ -116,9 +117,11 @@ const uploadImage = async (file: File) => {
 
 		isUploading.value = true;
 
+		const compressedImage: File = await compressImage(file);
+
 		// Create form data
 		const formData = new FormData();
-		formData.append('file', file);
+		formData.append('file', compressedImage);
 
 		const { data } = await axios.post(
 			`${import.meta.env.VITE_APP_BACKEND_URL}/media?name=${encodeURIComponent(file.name)}`,
