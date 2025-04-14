@@ -4,7 +4,7 @@
 		<header>
 			<HeaderComponent />
 		</header>
-		<router-view id="main" />
+		<router-view id="main" :key="router.currentRoute.value.path" />
 		<footer>
 			<FooterComponent />
 		</footer>
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import HeaderComponent from '@/components/HeaderComponent.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import router from './router';
 </script>
 
 <style>
