@@ -27,13 +27,26 @@
 			<div class="text-white mt-4">
 				<div v-html="detailsHtml" class="flex flex-col space-y-3 markdown-body" />
 			</div>
+			<div class="flex justify-between items-center mt-12">
+				<router-link :to="{ name: 'post', params: { postId: previousPostId } }"
+					class="flex items-center gap-0.5 text-type-primary" :class="previousPostId ? '' : 'invisible'">
+					<ArrowLongLeftIcon class="size-6" />
+					<p>Previous Post</p>
+				</router-link>
+				<router-link v-if="nextPostId" :to="{ name: 'post', params: { postId: nextPostId } }"
+					class="flex items-center gap-0.5 text-type-primary">
+					<p>Next Post</p>
+					<ArrowLongRightIcon class="size-6" />
+				</router-link>
+			</div>
+
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { ArrowLongLeftIcon } from '@heroicons/vue/24/outline';
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/vue/24/outline';
 import { ClockIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { marked } from 'marked';
 import { PostType, usePostStore } from '../store/postStore';
@@ -53,6 +66,9 @@ const postData = ref<PostType>();
 const detailsHtml = ref('');
 const isAuthenticated = ref(false);
 
+const previousPostId = ref<string | null>(null);
+const nextPostId = ref<string | null>(null);
+
 //TODO: fix this
 // @ts-ignore
 marked.use(imagerowExtension, {
@@ -68,6 +84,9 @@ onMounted(async () => {
 	const posts = postStore.getPosts;
 	const index = posts.findIndex((post) => post.id === props.postId);
 	postData.value = posts[index];
+
+	previousPostId.value = posts[index + 1]?.id || null;
+	nextPostId.value = posts[index - 1]?.id || null;
 
 	const detailsStringWithNewlines = postData.value?.content.replace(/\\n/g, '\n') || '';
 

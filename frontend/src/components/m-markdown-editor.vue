@@ -21,7 +21,7 @@
 		</div>
 
 		<div class="editor-container" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave"
-			@drop.prevent="handleDrop">
+			@drop.prevent="handleDrop" @paste="handleImagePaste">
 
 			<div v-if="isDragging" class="drag-overlay">
 				<div class="drop-message">Drop image to upload</div>
@@ -90,6 +90,20 @@ const handleDragLeave = () => {
 	isDragging.value = false;
 };
 
+const handleImagePaste = async (event: ClipboardEvent) => {
+	const items = event.clipboardData?.items;
+	if (!items) return;
+
+	for (const item of items) {
+		if (item.kind === 'file' && item.type.startsWith('image/')) {
+			const file = item.getAsFile();
+			if (file) {
+				await uploadImage(file);
+			}
+		}
+	}
+};
+
 const handleDrop = async (event: DragEvent) => {
 	isDragging.value = false;
 
@@ -108,7 +122,6 @@ const handleDrop = async (event: DragEvent) => {
 	await uploadImage(file);
 };
 
-// Dummy upload function
 const uploadImage = async (file: File) => {
 	try {
 		const user = auth.currentUser;

@@ -13,6 +13,8 @@
 		</div>
 		<m-button text="my work" colourful route-name="projects"
 			class="mt-6 transition-all duration-200 hover:scale-105 hover:-rotate-2" />
+		<m-button text="I'm on a trip!" route-name="posts"
+			class="mt-6 transition-all duration-200 hover:scale-105 hover:-rotate-2" />
 	</div>
 </template>
 
