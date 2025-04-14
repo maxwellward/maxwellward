@@ -20,7 +20,11 @@
 				<p class="text-sm">Back</p>
 			</router-link>
 			<h1 class="text-white font-bold text-3xl">{{ postData.title }}</h1>
-			<div class="text-white mt-6">
+			<div class="flex items-center gap-1 mt-1">
+				<ClockIcon class="size-4 text-gray-500" />
+				<h2 class="text-gray-500 text-sm font-semibold">{{ friendlyDate }}</h2>
+			</div>
+			<div class="text-white mt-4">
 				<div v-html="detailsHtml" class="flex flex-col space-y-3 markdown-body" />
 			</div>
 		</div>
@@ -28,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { ArrowLongLeftIcon } from '@heroicons/vue/24/outline';
-import { PencilIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { ClockIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { marked } from 'marked';
 import { PostType, usePostStore } from '../store/postStore';
 import { firebase } from '@/main';
@@ -83,4 +87,22 @@ const deletePost = async () => {
 		router.push({ name: 'posts' });
 	}
 }
+
+// For Firebase Timestamp conversion
+const friendlyDate = computed(() => {
+	if (postData.value === undefined) {
+		return '';
+	}
+
+	const date = postData.value.date;
+
+	if (date && typeof date === 'object' && 'toDate' in date) {
+		const jsDate = date.toDate();
+		return jsDate.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+	}
+});
 </script>
