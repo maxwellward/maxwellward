@@ -117,11 +117,12 @@ const friendlyDate = computed(() => {
 
 	if (date && typeof date === 'object' && 'toDate' in date) {
 		const jsDate = date.toDate();
-		return jsDate.toLocaleDateString('en-US', {
+		return new Intl.DateTimeFormat('en-US', {
 			year: 'numeric',
 			month: 'long',
 			day: 'numeric',
-		});
+			timeZone: 'America/Los_Angeles'
+		}).format(jsDate);
 	}
 });
 </script>

@@ -54,7 +54,11 @@ const selectedDate = ref();
 
 const updatePostDate = () => {
 	if (selectedDate.value) {
+		// Create date at the selected date
 		const date = new Date(selectedDate.value + "T00:00:00");
+		// Set to noon PST (UTC-8 or UTC-7 depending on daylight saving)
+		// Using UTC-8 (standard PST time)
+		date.setUTCHours(20, 0, 0, 0); // 20:00 UTC = 12:00 PST (UTC-8)
 		post.value.date = new Timestamp(Math.floor(date.getTime() / 1000), 0);
 	}
 }
