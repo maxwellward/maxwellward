@@ -25,7 +25,7 @@ export const usePostStore = defineStore('posts', () => {
 	const currentPage = ref(0);
 	const totalDocuments = ref(0);
 
-	const getPage = computed((): PostPage => posts.value[currentPage.value] || {});
+	const getPage = computed((): PostPage => posts.value[currentPage.value] || { posts: [], currentPage: currentPage.value });
 	const getPost = (id: string): PostType | undefined => posts.value[currentPage.value].posts.find((post) => post.id === id);
 	const getLoaded = computed(() => loaded.value);
 	const getCurrentPage = computed((): number => currentPage.value);
