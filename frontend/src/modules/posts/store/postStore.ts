@@ -2,23 +2,42 @@ import { db } from "@/main";
 import { getDocs, collection, addDoc, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
-import { Timestamp } from '@firebase/firestore';
+import { DocumentData, getCountFromServer, limit, orderBy, query, startAfter, Timestamp } from '@firebase/firestore';
 
 export type PostType = {
 	id?: string,
+	rawDocument: DocumentData,
 	title: string,
 	description: string,
 	content: string,
 	date: Timestamp;
 }
 
+type PostPage = {
+	posts: PostType[],
+	currentPage: number,
+}
+
 export const usePostStore = defineStore('posts', () => {
-	const posts = ref<PostType[]>([]);
+	const posts = ref<PostPage[]>([]);
 	const loaded = ref(false);
 
-	const getPosts = computed((): PostType[] => posts.value);
-	const getPost = (id: string): PostType | undefined => posts.value.find((post) => post.id === id);
-	const getLoaded = computed(() => loaded.value)
+	const currentPage = ref(0);
+	const totalDocuments = ref(0);
+
+	const getPage = computed((): PostPage => posts.value[currentPage.value] || {});
+	const getPost = (id: string): PostType | undefined => posts.value[currentPage.value].posts.find((post) => post.id === id);
+	const getLoaded = computed(() => loaded.value);
+	const getCurrentPage = computed((): number => currentPage.value);
+	const getTotalDocuments = computed((): number => totalDocuments.value);
+
+	async function setCurrentPage(page: number): Promise<void> {
+		if (!posts.value[page]) {
+			await fetchPosts(page);
+		}
+
+		currentPage.value = page;
+	}
 
 	/**
 	 * Fetches post documents from Firestore database and updates the local posts state.
@@ -30,13 +49,35 @@ export const usePostStore = defineStore('posts', () => {
 	 * @returns {Promise<void>} - Promise that resolves when posts are fetched and state is updated
 	 * @throws {FirebaseError} - If there's an error accessing Firestore
 	 */
-	async function fetchPosts() {
-		const querySnapshot = await getDocs(collection(db, "posts"));
-		posts.value = querySnapshot.docs.map((doc) => {
+	async function fetchPosts(page: number = 0) {
+		loaded.value = false;
+		const coll = collection(db, "posts");
+		const counterSnapshot = await getCountFromServer(coll);
+		totalDocuments.value = counterSnapshot.data().count;
+
+		let q;
+		if (page === 0) {
+			// If we're on the first page, fetch the first 10 posts
+			q = query(collection(db, "posts"), orderBy("date", "desc"), limit(9));
+		} else {
+			// If we're on subsequent pages, fetch the next 10 posts after the last post of the current page
+			const lastPost = posts.value[page - 1].posts.slice(-1)[0].rawDocument;
+
+			q = query(
+				collection(db, "posts"),
+				orderBy("date", "desc"),
+				startAfter(lastPost),
+				limit(9));
+		}
+
+		const querySnapshot = await getDocs(q);
+
+		const tempPosts = querySnapshot.docs.map((doc) => {
 			const data = doc.data();
 
 			return {
 				id: doc.id,
+				rawDocument: doc,
 				title: data.title,
 				description: data.description,
 				content: data.content,
@@ -46,6 +87,12 @@ export const usePostStore = defineStore('posts', () => {
 			// Sort by timestamp in descending order (newest first)
 			return b.date.toMillis() - a.date.toMillis();
 		});
+
+
+		posts.value[page] = {
+			posts: tempPosts,
+			currentPage: page,
+		}
 
 		loaded.value = true;
 	}
@@ -62,12 +109,12 @@ export const usePostStore = defineStore('posts', () => {
 	async function savePost(post: PostType) {
 		if (!post.id) {
 			await addDoc(collection(db, "posts"), post);
-			posts.value = [...posts.value, post];
+			posts.value[currentPage.value].posts = [...posts.value[currentPage.value].posts, post];
 		} else {
 			await setDoc(doc(db, "posts", post.id), post);
 
-			const index = posts.value.findIndex((p) => p.id === post.id);
-			posts.value[index] = post;
+			const index = posts.value[currentPage.value].posts.findIndex((p) => p.id === post.id);
+			posts.value[currentPage.value].posts[index] = post;
 		}
 
 		await fetchPosts();
@@ -81,7 +128,7 @@ export const usePostStore = defineStore('posts', () => {
 	 */
 	async function deletePost(id: string) {
 		await deleteDoc(doc(db, "posts", id));
-		posts.value = posts.value.filter((post) => post.id !== id);
+		posts.value[currentPage.value].posts = posts.value[currentPage.value].posts.filter((post) => post.id !== id);
 	}
 
 
@@ -110,5 +157,5 @@ export const usePostStore = defineStore('posts', () => {
 		}
 	}
 
-	return { posts, getPosts, getPost, fetchPosts, fetchPost, savePost, deletePost, getLoaded }
+	return { posts, getPage, getPost, fetchPosts, fetchPost, savePost, deletePost, getLoaded, setCurrentPage, getCurrentPage, getTotalDocuments }
 })
