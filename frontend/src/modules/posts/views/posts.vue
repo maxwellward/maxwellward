@@ -18,11 +18,11 @@
 			</div>
 		</div>
 		<div class="text-white flex gap-8" v-if="loaded">
-			<button @click="nextPage" v-if="hasNextPage" class="flex items-center gap-1">
+			<button @click="nextPage" v-if="hasNextPage" class="flex items-center gap-1 hover:cursor-pointer">
 				<ArrowLongLeftIcon class="size-4 inline-block" />
 				<p>Next Page</p>
 			</button>
-			<button @click="prevPage" v-if="hasPrevPage" class="flex items-center gap-1">
+			<button @click="prevPage" v-if="hasPrevPage" class="flex items-center gap-1 hover:cursor-pointer">
 				<p>Previous Page</p>
 				<ArrowLongRightIcon class="size-4 inline-block" />
 			</button>
