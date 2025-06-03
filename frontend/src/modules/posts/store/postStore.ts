@@ -58,7 +58,7 @@ export const usePostStore = defineStore('posts', () => {
 	 * @returns {Promise<void>} - Promise that resolves when posts are fetched and state is updated
 	 * @throws {FirebaseError} - If there's an error accessing Firestore
 	 */
-	async function fetchPosts(page: number = 0) {
+	async function fetchPosts(page: number = currentPage.value) {
 		loaded.value = false;
 		const coll = collection(db, "posts");
 		const counterSnapshot = await getCountFromServer(coll);
