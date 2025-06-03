@@ -61,10 +61,10 @@ export const usePostStore = defineStore('posts', () => {
 
 		let q;
 		if (page === 0) {
-			// If we're on the first page, fetch the first 10 posts
+			// If we're on the first page, fetch the first 9 posts
 			q = query(collection(db, "posts"), orderBy("date", "desc"), limit(ITEMS_PER_PAGE));
 		} else {
-			// If we're on subsequent pages, fetch the next 10 posts after the last post of the current page
+			// If we're on subsequent pages, fetch the next 9 posts after the last post of the current page
 			const lastPost = posts.value[page - 1].posts.slice(-1)[0].rawDocument;
 
 			q = query(
@@ -133,6 +133,7 @@ export const usePostStore = defineStore('posts', () => {
 	async function deletePost(id: string) {
 		await deleteDoc(doc(db, "posts", id));
 		posts.value[currentPage.value].posts = posts.value[currentPage.value].posts.filter((post) => post.id !== id);
+		totalDocuments.value--;
 	}
 
 
