@@ -81,7 +81,7 @@ onMounted(async () => {
 		await postStore.fetchPosts();
 	}
 
-	const posts = postStore.getPosts;
+	const posts = postStore.getPage.posts;
 	const index = posts.findIndex((post) => post.id === props.postId);
 	postData.value = posts[index];
 
