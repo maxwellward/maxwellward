@@ -6,7 +6,7 @@ import { DocumentData, getCountFromServer, limit, orderBy, query, startAfter, Ti
 
 export type PostType = {
 	id?: string,
-	rawDocument: DocumentData,
+	rawDocument?: DocumentData,
 	title: string,
 	description: string,
 	content: string,
