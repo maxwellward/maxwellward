@@ -17,7 +17,7 @@
 				<PostCard :post="post" v-for="post in posts" :key="post.id" />
 			</div>
 		</div>
-		<div class="text-white flex gap-8">
+		<div class="text-white flex gap-8" v-if="loaded">
 			<button @click="nextPage" v-if="hasNextPage" class="flex items-center gap-1">
 				<ArrowLongLeftIcon class="size-4 inline-block" />
 				<p>Next Page</p>
