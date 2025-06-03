@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { PostType, usePostStore } from '../store/postStore';
+import { ITEMS_PER_PAGE, PostType, usePostStore } from '../store/postStore';
 import PostCard from '../components/post-card.vue';
 import { getAuth } from 'firebase/auth';
 import { firebase } from '@/main';
@@ -64,7 +64,6 @@ onMounted(async () => {
 	}
 });
 
-const ITEMS_PER_PAGE = 9;
 const hasPrevPage = computed(() => {
 	return postStore.getCurrentPage * ITEMS_PER_PAGE < postStore.getTotalDocuments && posts.value.length === ITEMS_PER_PAGE;
 })
