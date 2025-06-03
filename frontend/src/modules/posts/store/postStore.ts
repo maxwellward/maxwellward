@@ -35,6 +35,10 @@ export const usePostStore = defineStore('posts', () => {
 	const getTotalDocuments = computed((): number => totalDocuments.value);
 
 	async function setCurrentPage(page: number): Promise<void> {
+		if (page < 0 || page >= Math.ceil(totalDocuments.value / 9)) {
+			throw new Error("Invalid page number");
+		}
+
 		if (!posts.value[page]) {
 			await fetchPosts(page);
 		}
