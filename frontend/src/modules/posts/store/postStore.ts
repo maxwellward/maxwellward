@@ -114,6 +114,7 @@ export const usePostStore = defineStore('posts', () => {
 		if (!post.id) {
 			await addDoc(collection(db, "posts"), post);
 			posts.value[currentPage.value].posts = [...posts.value[currentPage.value].posts, post];
+			totalDocuments.value++;
 		} else {
 			await setDoc(doc(db, "posts", post.id), post);
 
