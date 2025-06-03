@@ -17,11 +17,15 @@
 				<PostCard :post="post" v-for="post in posts" :key="post.id" />
 			</div>
 		</div>
-		<div class="text-white flex gap-8" v-if="loaded">
+		<div class="text-white flex gap-8 items-center" v-if="loaded">
 			<button @click="nextPage" v-if="hasNextPage" class="flex items-center gap-1 hover:cursor-pointer">
 				<ArrowLongLeftIcon class="size-4 inline-block" />
 				<p>Next Page</p>
 			</button>
+			<div>
+				<p class="text-sm text-gray-400">Page {{ postStore.getCurrentPage + 1 }} of {{
+					Math.ceil(postStore.getTotalDocuments / 9) }}</p>
+			</div>
 			<button @click="prevPage" v-if="hasPrevPage" class="flex items-center gap-1 hover:cursor-pointer">
 				<p>Previous Page</p>
 				<ArrowLongRightIcon class="size-4 inline-block" />
