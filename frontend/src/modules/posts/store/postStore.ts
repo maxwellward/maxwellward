@@ -49,6 +49,7 @@ export const usePostStore = defineStore('posts', () => {
 	 * @returns {Promise<void>} - Promise that resolves when posts are fetched and state is updated
 	 * @throws {FirebaseError} - If there's an error accessing Firestore
 	 */
+	const ITEMS_PER_PAGE = 9;
 	async function fetchPosts(page: number = 0) {
 		loaded.value = false;
 		const coll = collection(db, "posts");
@@ -58,7 +59,7 @@ export const usePostStore = defineStore('posts', () => {
 		let q;
 		if (page === 0) {
 			// If we're on the first page, fetch the first 10 posts
-			q = query(collection(db, "posts"), orderBy("date", "desc"), limit(9));
+			q = query(collection(db, "posts"), orderBy("date", "desc"), limit(ITEMS_PER_PAGE));
 		} else {
 			// If we're on subsequent pages, fetch the next 10 posts after the last post of the current page
 			const lastPost = posts.value[page - 1].posts.slice(-1)[0].rawDocument;
@@ -67,7 +68,7 @@ export const usePostStore = defineStore('posts', () => {
 				collection(db, "posts"),
 				orderBy("date", "desc"),
 				startAfter(lastPost),
-				limit(9));
+				limit(ITEMS_PER_PAGE));
 		}
 
 		const querySnapshot = await getDocs(q);
