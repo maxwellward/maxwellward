@@ -60,8 +60,9 @@ onMounted(async () => {
 	}
 });
 
+const ITEMS_PER_PAGE = 9;
 const hasPrevPage = computed(() => {
-	return (postStore.getCurrentPage * 9) + 1 < postStore.getTotalDocuments;
+	return postStore.getCurrentPage * ITEMS_PER_PAGE < postStore.getTotalDocuments && posts.value.length === ITEMS_PER_PAGE;
 })
 
 const hasNextPage = computed(() => {
