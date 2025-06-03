@@ -19,7 +19,10 @@ type PostPage = {
 }
 
 export const usePostStore = defineStore('posts', () => {
-	const posts = ref<PostPage[]>([]);
+	const posts = ref<PostPage[]>([{
+		posts: [],
+		currentPage: 0,
+	}]);
 	const loaded = ref(false);
 
 	const currentPage = ref(0);
