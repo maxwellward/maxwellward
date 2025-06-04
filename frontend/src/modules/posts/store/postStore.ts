@@ -121,7 +121,9 @@ export const usePostStore = defineStore('posts', () => {
 			posts.value[currentPage.value].posts = [...posts.value[currentPage.value].posts, post];
 			totalDocuments.value++;
 		} else {
-			await setDoc(doc(db, "posts", post.id), post);
+			const postToSend = post;
+			delete postToSend.rawDocument;
+			await setDoc(doc(db, "posts", post.id), postToSend);
 
 			const index = posts.value[currentPage.value].posts.findIndex((p) => p.id === post.id);
 			posts.value[currentPage.value].posts[index] = post;
