@@ -64,6 +64,7 @@ const updatePostDate = () => {
 }
 
 const save = async () => {
+	updatePostDate();
 	await postStore.savePost(post.value);
 	router.push({ name: 'posts' });
 }
