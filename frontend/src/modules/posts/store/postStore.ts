@@ -11,6 +11,7 @@ export type PostType = {
 	description: string,
 	content: string,
 	date: Timestamp;
+	tags?: string[];
 }
 
 type PostPage = {
@@ -114,6 +115,7 @@ export const usePostStore = defineStore('posts', () => {
 				description: data.description,
 				content: data.content,
 				date: data.date,
+				tags: data.tags,
 			}
 		}).sort((a, b) => {
 			// Sort by timestamp in descending order (newest first)
