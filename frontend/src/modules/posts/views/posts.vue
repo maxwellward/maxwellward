@@ -6,7 +6,15 @@
 				<PencilIcon class="size-3 -mt-1" />
 				<p>Create Post</p>
 			</router-link>
-			<h1 class="text-type-primary font-bold text-4xl mb-5 xs:mb-10">Recent Posts</h1>
+			<h1 class="text-type-primary font-bold text-4xl">Recent Posts</h1>
+			<div class="flex justify-between items-center mb-3 xs:mb-4">
+				<div class="flex items-center gap-2">
+					<input type="checkbox" id="state-trip-posts" v-model="postStore.includeTripPosts"
+						class="w-4 h-4 accent-accent bg-card border-cardborder/80 rounded focus:ring-accent" />
+					<label for="state-trip-posts" class="text-type-secondary text-sm cursor-pointer">Show US States Trip
+						Posts</label>
+				</div>
+			</div>
 			<div v-if="!loaded"
 				class="size-full dot-matrix xs:p-12 flex flex-wrap gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-16 w-full justify-center xs:justify-normal py-8">
 				<div v-for="i in 3" :key="i"
@@ -75,6 +83,13 @@ const hasNextPage = computed(() => {
 watch(() => postStore.getCurrentPage, () => {
 	posts.value = postStore.getPage.posts;
 }, { immediate: true });
+
+watch(() => postStore.includeTripPosts, async () => {
+	postStore.posts = [];
+	postStore.setCurrentPage(0);
+	await postStore.fetchPosts()
+	posts.value = postStore.getPage.posts;
+})
 
 const prevPage = () => {
 	postStore.setCurrentPage(postStore.getCurrentPage + 1);

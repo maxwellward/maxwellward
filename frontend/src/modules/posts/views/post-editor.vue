@@ -5,6 +5,12 @@
 			class="w-4/5 border border-type-secondary py-1 px-2 rounded-md text-white" />
 		<input v-model="post.description" type="text" placeholder="Description"
 			class="w-4/5 border border-type-secondary py-1 px-2 rounded-md text-white" />
+		<div class="flex items-center gap-2">
+			<input type="checkbox" id="state-trip-post" v-model="isUsTripPost"
+				class="w-4 h-4 accent-accent bg-card border-cardborder/80 rounded focus:ring-accent" />
+			<label for="state-trip-post" class="text-type-secondary text-sm cursor-pointer">Is US States Trip
+				Post</label>
+		</div>
 		<input v-model="selectedDate" type="date" placeholder="Date"
 			class="w-4/5 border border-type-secondary py-1 px-2 rounded-md text-white" @change="updatePostDate" />
 		<m-markdown-editor v-model="post.content" class="w-4/5 text-white" />
@@ -30,6 +36,8 @@ const props = defineProps<Props>();
 
 const postStore = usePostStore();
 
+const isUsTripPost = ref<boolean>(false);
+
 const post = ref<PostType>({
 	title: '',
 	description: '',
@@ -44,6 +52,9 @@ onMounted(async () => {
 		if (p) {
 			post.value = p;
 			selectedDate.value = new Date(p.date.seconds * 1000).toISOString().split('T')[0];
+			console.log(post.value.tags);
+
+			isUsTripPost.value = post.value.tags?.includes('megatrip') ?? false;
 		} else {
 			throw new Error('Post not found');
 		}
@@ -64,6 +75,8 @@ const updatePostDate = () => {
 }
 
 const save = async () => {
+	post.value.tags = isUsTripPost.value ? ['megatrip'] : []
+	updatePostDate();
 	await postStore.savePost(post.value);
 	router.push({ name: 'posts' });
 }
