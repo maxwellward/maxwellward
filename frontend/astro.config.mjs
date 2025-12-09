@@ -5,6 +5,7 @@ import { remarkImageRow } from './src/plugins/remark-imagerow.js';
 
 // https://astro.build/config
 export default defineConfig({
+  trailingSlash: 'always',
   integrations: [vue()],
   markdown: {
     remarkPlugins: [remarkImageRow],
