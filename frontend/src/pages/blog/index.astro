@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagFilter from '../../components/TagFilter.vue';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }: CollectionEntry<'blog'>) => !data.draft);
+
+const sortedPosts = allPosts.sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const allTags = [...new Set(allPosts.flatMap((p: CollectionEntry<'blog'>) => p.data.tags))].sort();
+
+const serializedPosts = sortedPosts.map((post: CollectionEntry<'blog'>) => ({
+  id: post.id,
+  data: {
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate,
+    tags: post.data.tags,
+    image: post.data.image,
+  },
+}));
+---
+
+<BaseLayout title="Blog">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <p class="page-label">// blog</p>
+        <h1 class="page-title">Thoughts & Writing</h1>
+        <p class="page-description">
+          Sometimes I write things, sometimes I don't. When I do, I'll put it here!
+        </p>
+      </div>
+
+      {allPosts.length > 0 ? (
+        <TagFilter client:load tags={allTags} posts={serializedPosts} />
+      ) : (
+        <div class="empty-state">
+          <p>No blog posts yet. Check back soon!</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .page-title {
+      font-size: 2rem;
+    }
+  }
+</style>

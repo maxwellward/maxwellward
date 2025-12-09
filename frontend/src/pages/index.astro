@@ -1,0 +1,405 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects', ({ data }) => !data.draft);
+const featuredProjects = allProjects
+	.filter((p) => p.data.featured)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+	.slice(0, 3);
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const recentPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()).slice(0, 3);
+
+const greetings = ['hi there :)', 'hello!', 'hey, you :)', 'bonjour'];
+---
+
+<BaseLayout title="Home">
+	<!-- Hero Section -->
+	<section class="hero film-grain">
+		<div class="container">
+			<div class="hero-content">
+				<p class="hero-greeting">
+					<span class="comment" data-greetings={JSON.stringify(greetings)}>// hi there :)</span>
+				</p>
+				<h1 class="hero-title">Maxwell Ward</h1>
+				<p class="hero-role">software developer <span class="hero-location">· vancouver, canada</span></p>
+				<p class="hero-description">I build stuff for the web. Professionally curious and always looking for a new project.</p>
+				<div class="hero-actions">
+					<a href="/projects" class="btn btn-primary">my projects</a>
+					<a href="/about" class="btn btn-outline">about me</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured Projects Section -->
+	<section class="section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">featured projects</h2>
+				<a href="/projects" class="section-link">view all →</a>
+			</div>
+
+			{
+				featuredProjects.length > 0 ? (
+					<div class="grid sm:grid-cols-2 lg:grid-cols-3">
+						{featuredProjects.map((project) => (
+							<ProjectCard
+								title={project.data.title}
+								description={project.data.description}
+								category={project.data.category}
+								slug={project.id}
+								tags={project.data.tags}
+								github={project.data.github}
+								website={project.data.website}
+								image={project.data.image}
+								hasContent={(project.body ?? '').trim().length > 0}
+							/>
+						))}
+					</div>
+				) : (
+					<div class="empty-state">
+						<p>No featured projects yet. Check back soon!</p>
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- Recent Blog Posts Section -->
+	<section class="section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">recent posts</h2>
+				<a href="/blog" class="section-link">view all →</a>
+			</div>
+
+			{
+				recentPosts.length > 0 ? (
+					<div class="grid sm:grid-cols-2 lg:grid-cols-3">
+						{recentPosts.map((post) => (
+							<BlogCard
+								title={post.data.title}
+								description={post.data.description}
+								pubDate={post.data.pubDate}
+								slug={post.id}
+								tags={post.data.tags}
+								image={post.data.image}
+							/>
+						))}
+					</div>
+				) : (
+					<div class="empty-state">
+						<p>No blog posts yet. Check back soon!</p>
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="section cta-section film-grain">
+		<div class="container">
+			<div class="cta-content">
+				<p class="cta-label">// get in touch</p>
+				<h2 class="cta-title">Let's work together</h2>
+				<p class="cta-text">Have an interesting project or just want to say hi? Let's chat :)</p>
+
+				<button class="btn btn-primary email-btn">
+					<span class="email-text"><span class="email">max.jp.<span>ward@</span>gmail.<span>example.</span>com</span></span>
+					<span class="copied-text">Copied!</span>
+				</button>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.email > span:nth-child(2) {
+		display: none;
+	}
+
+	.email-btn {
+		position: relative;
+	}
+
+	.email-text,
+	.copied-text {
+		transition: opacity 0.15s ease-in-out;
+	}
+
+	.copied-text {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.email-btn.copied .email-text {
+		opacity: 0;
+	}
+
+	.email-btn.copied .copied-text {
+		opacity: 1;
+	}
+
+	.hero {
+		padding: var(--space-3xl) 0;
+		min-height: calc(70vh - var(--header-height));
+		display: flex;
+		align-items: center;
+	}
+
+	.hero .container {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: var(--space-3xl);
+		align-items: start;
+	}
+
+	.hero-content {
+		max-width: 560px;
+	}
+
+	.hero-greeting {
+		margin-bottom: var(--space-lg);
+	}
+
+	.comment {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		color: var(--color-text-muted);
+	}
+
+	.hero-title {
+		font-size: 3.5rem;
+		font-weight: 600;
+		line-height: 1.1;
+		margin-bottom: var(--space-sm);
+		color: var(--color-text);
+	}
+
+	.hero-role {
+		font-family: var(--font-mono);
+		font-size: 1.125rem;
+		color: var(--color-primary);
+	}
+
+	.hero-location {
+		color: var(--color-text-muted);
+		font-weight: 400;
+	}
+
+	.hero-description {
+		font-size: 1.125rem;
+		color: var(--color-text-secondary);
+		line-height: 1.7;
+		margin-top: var(--space-xl);
+		margin-bottom: var(--space-xl);
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: var(--space-md);
+	}
+
+	.hero-aside {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-md);
+		min-width: 200px;
+	}
+
+	.status-card {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-md);
+	}
+
+	.status-header {
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
+		margin-bottom: var(--space-xs);
+	}
+
+	.status-dot {
+		width: 8px;
+		height: 8px;
+		background: #22c55e;
+		border-radius: 50%;
+		animation: pulse 2s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.5;
+		}
+	}
+
+	.status-label {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--color-text-muted);
+		text-transform: lowercase;
+	}
+
+	.status-text {
+		font-size: 0.875rem;
+		color: var(--color-text);
+		font-weight: 500;
+	}
+
+	.location-card {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-md);
+	}
+
+	.location-label {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--color-text-muted);
+	}
+
+	.location-value {
+		font-size: 0.875rem;
+		color: var(--color-text);
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: var(--space-xl);
+	}
+
+	.section-link {
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		color: var(--color-text-muted);
+	}
+
+	.section-link:hover {
+		color: var(--color-primary);
+	}
+
+	.section-alt {
+		background: var(--color-bg-secondary);
+		padding: var(--space-xl) 0 var(--space-3xl) 0;
+		margin: 0 calc(-50vw + 50%);
+		padding-left: calc(50vw - 50%);
+		padding-right: calc(50vw - 50%);
+	}
+
+	.cta-section {
+		text-align: center;
+		padding: var(--space-3xl) 0;
+	}
+
+	.cta-content {
+		max-width: 480px;
+		margin: 0 auto;
+	}
+
+	.cta-label {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		color: var(--color-text-muted);
+		margin-bottom: var(--space-md);
+	}
+
+	.cta-title {
+		font-size: 2rem;
+		font-weight: 600;
+		margin-bottom: var(--space-md);
+		color: var(--color-text);
+	}
+
+	.cta-text {
+		font-size: 1rem;
+		color: var(--color-text-secondary);
+		margin-bottom: var(--space-xl);
+		line-height: 1.6;
+	}
+
+	@media (max-width: 900px) {
+		.hero .container {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-aside {
+			flex-direction: row;
+		}
+
+		.hero-aside > * {
+			flex: 1;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.hero-title {
+			font-size: 2.5rem;
+		}
+
+		.hero-role {
+			font-size: 1rem;
+		}
+
+		.hero-description {
+			font-size: 1rem;
+		}
+
+		.hero-aside {
+			flex-direction: column;
+		}
+
+		.section-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: var(--space-sm);
+		}
+
+		.cta-title {
+			font-size: 1.5rem;
+		}
+	}
+</style>
+
+<script>
+	import { getDeobfuscatedEmail, copyEmailToClipboard } from '../utils/email';
+
+	const greetingEl = document.querySelector('.comment[data-greetings]') as HTMLElement;
+	if (greetingEl) {
+		const greetings = JSON.parse(greetingEl.dataset.greetings || '[]');
+		if (greetings.length > 0) {
+			greetingEl.textContent = '// ' + greetings[Math.floor(Math.random() * greetings.length)];
+		}
+	}
+
+	const emailBtn = document.querySelector('.email-btn') as HTMLButtonElement;
+	if (emailBtn) {
+		emailBtn.addEventListener('click', async () => {
+			const emailEl = emailBtn.querySelector('.email') as HTMLElement;
+			if (emailEl) {
+				const email = getDeobfuscatedEmail(emailEl);
+				await copyEmailToClipboard(email, emailBtn);
+			}
+		});
+	}
+</script>

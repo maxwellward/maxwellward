@@ -1,0 +1,192 @@
+---
+const navLinks = [
+  { href: '/', label: 'index' },
+  { href: '/projects', label: 'projects' },
+  { href: '/blog', label: 'blog' },
+  { href: '/about', label: 'about' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="header">
+  <nav class="nav container">
+    <a href="/" class="logo">
+      <span class="logo-bracket">{</span>
+      <span class="logo-text">maxward.ca</span>
+      <span class="logo-bracket">}</span>
+    </a>
+
+    <button class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="hamburger"></span>
+    </button>
+
+    <ul class="nav-links">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={['nav-link', { active: currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background: rgba(250, 249, 247, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .logo:hover {
+    color: var(--color-primary);
+  }
+
+  .logo-bracket {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+  }
+
+  .logo-text {
+    color: inherit;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .nav-link {
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-md);
+    transition: all 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-bg-secondary);
+  }
+
+  .nav-link.active {
+    color: var(--color-primary);
+    background: rgba(201, 100, 66, 0.08);
+  }
+
+  .mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .hamburger {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--color-text);
+    position: relative;
+    transition: background 0.2s ease;
+  }
+
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    transition: transform 0.2s ease;
+  }
+
+  .hamburger::before {
+    top: -6px;
+  }
+
+  .hamburger::after {
+    top: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-toggle {
+      display: block;
+      z-index: 101;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 260px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0.5rem;
+      padding: 2rem;
+      background: var(--color-surface);
+      border-left: 1px solid var(--color-border);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-links.open {
+      transform: translateX(0);
+    }
+
+    .nav-link {
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.mobile-toggle');
+  const navLinks = document.querySelector('.nav-links');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = navLinks?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!toggle?.contains(e.target as Node) && !navLinks?.contains(e.target as Node)) {
+      navLinks?.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
