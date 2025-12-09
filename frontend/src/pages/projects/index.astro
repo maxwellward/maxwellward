@@ -1,0 +1,216 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const allProjects = await getCollection('projects', ({ data }: CollectionEntry<'projects'>) => !data.draft);
+
+const sortedProjects = allProjects.sort(
+  (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
+    b.data.date.getTime() - a.data.date.getTime()
+);
+
+const categories = ['all', 'personal', 'opensource', 'professional'] as const;
+const categoryLabels: Record<string, string> = {
+  all: 'all',
+  personal: 'personal',
+  opensource: 'open-source',
+  professional: 'professional',
+};
+---
+
+<BaseLayout title="Projects">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <p class="page-label">// projects</p>
+        <h1 class="page-title">Things I've Built</h1>
+        <p class="page-description">
+          A collection of my work, inlcuding personal work, open source contributions,
+          and projects done in a professional capacity.
+        </p>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">filter:</span>
+        <div class="category-filters">
+          {categories.map((cat) => (
+            <button
+              class="category-btn"
+              data-category={cat}
+              aria-pressed={cat === 'all' ? 'true' : 'false'}
+            >
+              {categoryLabels[cat]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {sortedProjects.length > 0 ? (
+        <div class="projects-grid grid sm:grid-cols-2 lg:grid-cols-3">
+          {sortedProjects.map((project: CollectionEntry<'projects'>) => (
+            <div class="project-item" data-category={project.data.category}>
+              <ProjectCard
+                title={project.data.title}
+                description={project.data.description}
+                category={project.data.category}
+                slug={project.id}
+                tags={project.data.tags}
+                github={project.data.github}
+                website={project.data.website}
+                image={project.data.image}
+                hasContent={(project.body ?? '').trim().length > 0}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>No projects yet. Check back soon!</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .filter-section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .filter-label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .category-btn {
+    padding: 0.375rem 0.875rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .category-btn:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+  }
+
+  .category-btn[aria-pressed='true'] {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .project-item {
+    transition: opacity 0.2s ease;
+  }
+
+  .project-item.hidden {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .filter-section {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .category-filters {
+      width: 100%;
+    }
+
+    .category-btn {
+      flex: 1;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  const categoryBtns = document.querySelectorAll('.category-btn');
+  const projectItems = document.querySelectorAll('.project-item');
+
+  function filterProjects(category: string) {
+    projectItems.forEach((item) => {
+      const projectCategory = item.getAttribute('data-category');
+      if (category === 'all' || projectCategory === category) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    categoryBtns.forEach((btn) => {
+      btn.setAttribute('aria-pressed', btn.getAttribute('data-category') === category ? 'true' : 'false');
+    });
+  }
+
+  categoryBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-category') || 'all';
+      filterProjects(category);
+
+      const url = new URL(window.location.href);
+      if (category === 'all') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', category);
+      }
+      history.replaceState({}, '', url.toString());
+    });
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const initialCategory = params.get('category') || 'all';
+  filterProjects(initialCategory);
+</script>

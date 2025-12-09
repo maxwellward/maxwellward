@@ -1,0 +1,258 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About">
+  <section class="section">
+    <div class="container">
+      <div class="about-layout">
+        <div class="about-content">
+          <p class="page-label">// about</p>
+          <h1 class="page-title">Max Ward</h1>
+
+          <div class="prose">
+            <p class="lead">
+              Hi, my name is Max. I build things for the web and occasionally for other things.
+            </p>
+
+            <h2>What I Do</h2>
+            <p>
+              I specialize in front-end web development, with a personal focus being smaller tools to help people save time day-to-day. I enjoy working
+              with modern technologies and am always eager to learn new things.
+            </p>
+
+            <h2>History</h2>
+            <p>
+              I started working in the software space in approximately 2018, where I began taking an interest in modding "Minecraft" and working with Unity. From there, I slowly worked my way up to bigger and bigger projects. I started working at a company as a customer support agent, but was given the opportunity to do a horizontal shift within the company to software development, where my skills really grew.
+            </p>
+
+            <h2>Beyond Development</h2>
+            <p>
+              When I'm not working on a project, I'll be either nerding out over something public transit releated (I love the Skytrain), mapping something on OpenStreetMap, or planning my next trip to who knows where.
+            </p>
+
+            <h2>Get in Touch</h2>
+            <p>
+              If you've got an idea, or want to work on something together, don't hesitate to reach out.
+            </p>
+          </div>
+
+          <div class="contact-links">
+            <button class="btn btn-primary email-btn">
+              <span class="email-text"><span class="email">max.jp.<span>ward@</span>gmail.<span>example.</span>com</span></span>
+              <span class="copied-text">Copied!</span>
+            </button>
+            <a href="https://github.com/maxwellward" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+              github
+            </a>
+          </div>
+        </div>
+
+        <aside class="about-sidebar">
+          <div class="sidebar-card">
+            <h3 class="card-label">// quick facts</h3>
+            <ul class="facts-list">
+              <li>
+                <span class="fact-key">location</span>
+                <span class="fact-value">Canada</span>
+              </li>
+              <li>
+                <span class="fact-key">role</span>
+                <span class="fact-value">Web Developer</span>
+              </li>
+              <li>
+                <span class="fact-key">interests</span>
+                <span class="fact-value">Travel, Open Source, GIS, Public Transportation</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h3 class="card-label">// technologies</h3>
+            <div class="tech-tags">
+              <span class="tag">TypeScript</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Vue</span>
+              <span class="tag">React</span>
+              <span class="tag">Astro</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">Python</span>
+              <span class="tag">CSS</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+  }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  .about-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-xl));
+  }
+
+  .sidebar-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .card-label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+  }
+
+  .facts-list {
+    list-style: none;
+  }
+
+  .facts-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .facts-list li:last-child {
+    border-bottom: none;
+  }
+
+  .fact-key {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .fact-value {
+    font-size: 0.875rem;
+    color: var(--color-text);
+    text-align: right;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  @media (max-width: 1024px) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .about-sidebar {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .sidebar-card {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .lead {
+      font-size: 1rem;
+    }
+
+    .about-sidebar {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .email > span:nth-child(2) {
+    display: none;
+  }
+
+  .email-btn {
+    position: relative;
+  }
+
+  .email-text,
+  .copied-text {
+    transition: opacity 0.15s ease-in-out;
+  }
+
+  .copied-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: var(--radius-lg);
+    background: var(--color-primary);
+  }
+
+  .email-btn.copied .email-text {
+    opacity: 0;
+  }
+
+  .email-btn.copied .copied-text {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { getDeobfuscatedEmail, copyEmailToClipboard } from '../utils/email';
+
+  const emailBtn = document.querySelector('.email-btn') as HTMLButtonElement;
+  if (emailBtn) {
+    emailBtn.addEventListener('click', async () => {
+      const emailEl = emailBtn.querySelector('.email') as HTMLElement;
+      if (emailEl) {
+        const email = getDeobfuscatedEmail(emailEl);
+        await copyEmailToClipboard(email, emailBtn);
+      }
+    });
+  }
+</script>

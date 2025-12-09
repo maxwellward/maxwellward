@@ -1,0 +1,168 @@
+---
+const currentYear = new Date().getFullYear();
+
+const taglines = [
+  "pressing buttons on computers",
+  "working with really smart rocks",
+  "starting a new minecraft world",
+  "planning my next trip",
+  "rewriting my website... again",
+  "petting my cat",
+  "doing something on openstreetmap",
+  "riding the skytrain",
+  "mapping on openstreetmap"
+];
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-main">
+        <a href="/" class="footer-logo">
+          <span class="bracket">{</span>maxward.ca<span class="bracket">}</span>
+        </a>
+        <p class="footer-tagline" data-taglines={JSON.stringify(taglines)}>pressing buttons on computers</p>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="/">index</a>
+        <span class="separator">/</span>
+        <a href="/projects">projects</a>
+        <span class="separator">/</span>
+        <a href="/blog">blog</a>
+        <span class="separator">/</span>
+        <a href="/about">about</a>
+      </nav>
+
+      <div class="footer-links">
+        <a href="https://github.com/maxwellward" target="_blank" rel="noopener noreferrer">github</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p><span class="mono">&copy; {currentYear}</span> Max Ward</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-3xl) 0 var(--space-xl);
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .footer-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .footer-logo:hover {
+    color: var(--color-primary);
+  }
+
+  .bracket {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .footer-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .footer-nav a {
+    color: var(--color-text-secondary);
+  }
+
+  .footer-nav a:hover {
+    color: var(--color-primary);
+  }
+
+  .separator {
+    color: var(--color-text-muted);
+    opacity: 0.4;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .footer-links a {
+    color: var(--color-text-secondary);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-primary);
+  }
+
+  .footer-bottom {
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-bottom p {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer-content {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .footer-links {
+      gap: var(--space-xl);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-nav {
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+  }
+</style>
+
+<script>
+  const taglineEl = document.querySelector('.footer-tagline') as HTMLElement;
+  if (taglineEl) {
+    const taglines = JSON.parse(taglineEl.dataset.taglines || '[]');
+    if (taglines.length > 0) {
+      taglineEl.textContent = taglines[Math.floor(Math.random() * taglines.length)];
+    }
+  }
+</script>
