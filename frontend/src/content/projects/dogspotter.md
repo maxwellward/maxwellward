@@ -2,7 +2,7 @@
 title: "Dogspotter"
 description: "A mobile game based around taking photos of dogs in real life to gain points and climb the leaderboard."
 category: "personal"
-featured: true
+featured: false
 tags: ["Expo", "React Native"]
 github: "https://github.com/maxwellward/dogspotter-mobile"
 date: 2025-02-03

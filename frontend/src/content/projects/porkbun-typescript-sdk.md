@@ -1,6 +1,6 @@
 ---
 title: "Porkbun TypeScript SDK"
-description: "A SDK acting as a wrapper around the Porkbun API"
+description: "A SDK acting as a wrapper around the Porkbun API."
 category: "personal"
 featured: true
 tags: ["TypeScript"]
