@@ -9,6 +9,13 @@ import {
   type User,
 } from 'firebase/auth';
 
+interface MediaFile {
+  filename: string;
+  url: string;
+  size: number;
+  modified: number;
+}
+
 const ALLOWED_EMAIL = 'max.jp.ward@gmail.com';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/heic'];
@@ -24,6 +31,9 @@ const error = ref('');
 const markdownLink = ref('');
 const copied = ref(false);
 const dragging = ref(false);
+const mediaFiles = ref<MediaFile[]>([]);
+const loadingMedia = ref(false);
+const copiedFilename = ref('');
 
 onMounted(() => {
   onAuthStateChanged(auth, (firebaseUser) => {
@@ -32,6 +42,7 @@ onMounted(() => {
       if (firebaseUser.email === ALLOWED_EMAIL) {
         user.value = firebaseUser;
         unauthorized.value = false;
+        fetchMedia();
       } else {
         unauthorized.value = true;
         user.value = null;
@@ -42,6 +53,23 @@ onMounted(() => {
     }
   });
 });
+
+async function fetchMedia() {
+  loadingMedia.value = true;
+  try {
+    const token = await user.value!.getIdToken();
+    const res = await fetch(`${backendUrl}/media`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      mediaFiles.value = await res.json();
+    }
+  } catch {
+    // silently fail — gallery is non-critical
+  } finally {
+    loadingMedia.value = false;
+  }
+}
 
 async function handleSignIn() {
   error.value = '';
@@ -57,6 +85,7 @@ async function handleSignOut() {
   await signOut(auth);
   unauthorized.value = false;
   markdownLink.value = '';
+  mediaFiles.value = [];
 }
 
 function onDragOver(e: DragEvent) {
@@ -116,10 +145,32 @@ async function uploadFile(file: File) {
     const data = await res.json();
     const name = file.name.replace(/\.[^.]+$/, '');
     markdownLink.value = `![${name}](${backendUrl}/${data.url})`;
+    await fetchMedia();
   } catch (e: any) {
     error.value = e.message || 'Upload failed';
   } finally {
     uploading.value = false;
+  }
+}
+
+async function deleteFile(filename: string) {
+  if (!confirm(`Delete ${filename}? This cannot be undone.`)) return;
+
+  try {
+    const token = await user.value!.getIdToken();
+    const res = await fetch(`${backendUrl}/media/${filename}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      throw new Error(body?.detail || `Delete failed (${res.status})`);
+    }
+
+    mediaFiles.value = mediaFiles.value.filter((f) => f.filename !== filename);
+  } catch (e: any) {
+    error.value = e.message || 'Delete failed';
   }
 }
 
@@ -129,9 +180,23 @@ async function copyToClipboard() {
   setTimeout(() => (copied.value = false), 2000);
 }
 
+async function copyMediaLink(file: MediaFile) {
+  const name = file.filename.replace(/\.[^.]+$/, '');
+  const link = `![${name}](${backendUrl}/${file.url})`;
+  await navigator.clipboard.writeText(link);
+  copiedFilename.value = file.filename;
+  setTimeout(() => (copiedFilename.value = ''), 2000);
+}
+
 function uploadAnother() {
   markdownLink.value = '';
   error.value = '';
+}
+
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 </script>
 
@@ -206,6 +271,48 @@ function uploadAnother() {
           </p>
         </div>
       </div>
+
+      <!-- Media gallery -->
+      <div class="gallery-section">
+        <div class="gallery-header">
+          <span class="upload-label">// uploaded images</span>
+          <span class="gallery-count" v-if="mediaFiles.length">{{ mediaFiles.length }} files</span>
+        </div>
+
+        <div v-if="loadingMedia" class="state-box">
+          <p class="state-text">Loading images...</p>
+        </div>
+
+        <div v-else-if="mediaFiles.length === 0" class="empty-state">
+          <p>No images uploaded yet.</p>
+        </div>
+
+        <div v-else class="gallery-grid">
+          <div v-for="file in mediaFiles" :key="file.filename" class="gallery-item">
+            <div class="gallery-image">
+              <img :src="`${backendUrl}/${file.url}`" :alt="file.filename" loading="lazy" />
+            </div>
+            <div class="gallery-info">
+              <span class="gallery-filename" :title="file.filename">{{ file.filename }}</span>
+              <span class="gallery-size">{{ formatSize(file.size) }}</span>
+            </div>
+            <div class="gallery-actions">
+              <button
+                class="btn btn-outline btn-sm"
+                @click="copyMediaLink(file)"
+              >
+                {{ copiedFilename === file.filename ? 'Copied!' : 'Copy link' }}
+              </button>
+              <button
+                class="btn btn-danger btn-sm"
+                @click="deleteFile(file.filename)"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Error -->
@@ -218,7 +325,6 @@ function uploadAnother() {
 <style scoped>
 .image-upload {
   width: 100%;
-  max-width: 640px;
 }
 
 .state-box {
@@ -275,6 +381,17 @@ function uploadAnother() {
 .btn-outline:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.btn-danger:hover {
+  background: #fef2f2;
+  border-color: #f87171;
 }
 
 .upload-header {
@@ -379,6 +496,95 @@ function uploadAnother() {
   margin-top: var(--space-md);
 }
 
+.gallery-section {
+  margin-top: var(--space-2xl);
+}
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.gallery-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-lg);
+}
+
+.gallery-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.gallery-item:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.gallery-image {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+
+.gallery-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-info {
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.gallery-filename {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.gallery-size {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.gallery-actions {
+  padding: 0 var(--space-md) var(--space-md);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-xl);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
 .error-box {
   margin-top: var(--space-md);
   padding: var(--space-md);
@@ -387,5 +593,11 @@ function uploadAnother() {
   border-radius: var(--radius-md);
   color: #991b1b;
   font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
