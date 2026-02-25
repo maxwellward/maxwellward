@@ -15,6 +15,24 @@ import time
 
 router = APIRouter()
 
+@router.get("/media")
+async def list_media(user_data: dict = Depends(get_current_user)):
+	"""List all uploaded media files."""
+	if not os.path.isdir(MEDIA_DIR):
+		return []
+	files = []
+	for filename in os.listdir(MEDIA_DIR):
+		file_path = os.path.join(MEDIA_DIR, filename)
+		if os.path.isfile(file_path):
+			files.append({
+				"filename": filename,
+				"url": f"media/{filename}",
+				"size": os.path.getsize(file_path),
+				"modified": os.path.getmtime(file_path),
+			})
+	files.sort(key=lambda f: f["modified"], reverse=True)
+	return files
+
 @router.get("/media/{filename}")
 async def get_media(filename: str):
 	"""Serve an image or video file."""
@@ -23,6 +41,15 @@ async def get_media(filename: str):
 		raise HTTPException(status_code=404, detail="File not found")
 
 	return FileResponse(file_path, media_type="image/jpeg")
+
+@router.delete("/media/{filename}")
+async def delete_media(filename: str, user_data: dict = Depends(get_current_user)):
+	"""Delete a media file."""
+	file_path = os.path.join(MEDIA_DIR, filename)
+	if not os.path.exists(file_path):
+		raise HTTPException(status_code=404, detail="File not found")
+	os.remove(file_path)
+	return {"message": f"Successfully deleted {filename}"}
 
 @router.post("/media")
 async def create_media(file: UploadFile = File(), user_data: dict = Depends(get_current_user)):

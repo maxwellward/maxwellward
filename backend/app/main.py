@@ -11,6 +11,7 @@ from app.routes import router
 origins = [
     "https://maxward.ca",
     "http://localhost",
+    "http://localhost:4321",
     "http://localhost:5173",
 ]
 

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ImageUpload from '../components/ImageUpload.vue';
+---
+
+<BaseLayout title="Upload">
+  <section class="section">
+    <div class="container">
+      <div class="page-header">
+        <p class="page-label">// upload</p>
+        <h1 class="page-title">Image Upload</h1>
+        <p class="page-description">
+          Upload images and get markdown-ready links for blog and project content.
+        </p>
+      </div>
+
+      <ImageUpload client:only="vue" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .page-title {
+      font-size: 2rem;
+    }
+  }
+</style>
