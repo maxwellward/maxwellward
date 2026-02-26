@@ -13,7 +13,7 @@ I got back on the road at around 9am and made it to Salt Lake City a few hours l
 
 The Utah state capitol building is undergoing construction (shocker, they all seem to be) but I was still able to get right up to it for my photo. I wasn’t able to find anyone to take my photo for me, so I had to take a selfie which is not something I’m a huge fan of doing, but oh well.
 
-!imagerow{[image5](https://images.maxward.ca/media/image5_1743659864.jpg),![image6](https://images.maxward.ca/media/image6_1743659871.jpg)}
+::imagerow[https://images.maxward.ca/media/image5_1743659864.jpg, https://images.maxward.ca/media/image6_1743659871.jpg]
 
 The view from the capitol is pretty cool, it’s built on top of a hill so you get a view of the entire flat plains below as well as the mountains in the distance. My mum compared it to Mont Royal in Montreal, and I definitely see the similarities.
 
